@@ -4,6 +4,7 @@ const MainPage = () => {
     return (
         <BasicLayout>
             <div>Main Page</div>
+            <div>Welcome Admin</div>
         </BasicLayout>
         
     );
