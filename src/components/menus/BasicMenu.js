@@ -9,7 +9,7 @@ const BasicMenu = () => {
                     <Link to= {'/'}>Main</Link>
                     </li>
                     <li class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    <Link to= {'/members'}>회원 관리</Link>
+                    <Link to= {'/membermanager'}>회원 관리</Link>
                     </li>
                     <li class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     <Link to= {'/showmanager'}>공연 관리</Link>
