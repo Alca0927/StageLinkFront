@@ -5,6 +5,7 @@ import NoticeSideMenu from "../components/menus/SideMenu/NoticeSideMenu";
 import RegisterSideMenu from "../components/menus/SideMenu/RegisterSideMenu";
 import StatisticSideMenu from "../components/menus/SideMenu/StatisticSideMenu";
 
+
 import { useLocation } from "react-router-dom";
 
 const BasicLayout = ({ children }) => {
@@ -14,9 +15,9 @@ const BasicLayout = ({ children }) => {
     const renderSideMenu = () => {
         if (location.pathname.includes("/showmanager")) {
             return <ShowSideMenu />;
-        } else if (location.pathname.includes("/showmanager")) {
+        } else if (location.pathname.includes("/membermanager")) {
             return <MemberSideMenu />;
-        } else if (location.pathname.includes("/notice")) {
+        } else if (location.pathname.includes("/noticemanager")) {
             return <NoticeSideMenu />;
         } else if (location.pathname.includes("/register")) {
             return <RegisterSideMenu />;

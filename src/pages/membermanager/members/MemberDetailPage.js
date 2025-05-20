@@ -73,16 +73,6 @@ const MemberDetailPage = () => {
             </button>
             </div>
         </div>
-
-        <div className="w-1/4 border-l pl-6">
-            <h3 className="text-lg font-semibold mb-4">관리 메뉴</h3>
-            <button
-            onClick={() => navigate('/admin/membermanager/reportlist')}
-            className="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            >
-            불법 신고 목록
-            </button>
-        </div>
         </div>
     );
 };

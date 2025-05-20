@@ -1,22 +1,23 @@
 import { Suspense, lazy } from "react";
 import showmanagerRoutor from "./showmanagerRouter";
-import adminRoutor from "./adminRouter";
-import registermanagerRoutor from "./registermanagerRouter";
+import registermanagerRouter from "./registermanagerRouter";
+import membermanagerRouter from "./membermanagerRouter";
+import noticemanagerRoutor from "./noticemanagerRouter";
 
 import { createBrowserRouter } from "react-router-dom";
 
+const Loading = <div>Loading...</div>;
 
-const Loading = <div>Loading...</div>
-const Main = lazy(() => import("../pages/MainPage"))
-const ShowManager = lazy(() => import("../pages/ShowManager/ShowMainPage"))
-const RegisterManager = lazy(() => import("../pages/RegisterManager/RegisterMainPage"))
-const Administration = lazy(() => import("../pages/AdminMainPage"));
-
+const Main = lazy(() => import("../pages/MainPage"));
+const ShowManager = lazy(() => import("../pages/showmanager/ShowMainPage"));
+const RegisterManager = lazy(() => import("../pages/RegisterManager/RegisterMainPage"));
+const MemberManager = lazy(() => import("../pages/memberManager/memberMainPage"));
+const NoticeManager = lazy(() => import("../pages/noticeManager/noticeMainPage"));
 
 const root = createBrowserRouter([
     {
         path: "/",
-        element: <Suspense fallback={Loading}><Main/></Suspense>
+        element: <Suspense fallback={Loading}><Main /></Suspense>
     },
     {
         path: "/showmanager",
@@ -24,13 +25,19 @@ const root = createBrowserRouter([
         children: showmanagerRoutor()
     },
     {
-        path: "/admin",
-        element: <Suspense fallback={Loading}><Administration /></Suspense>,
-        children: adminRoutor()
-    },
         path: "/registermanager",
         element: <Suspense fallback={Loading}><RegisterManager/></Suspense>,
-        children: registermanagerRoutor()
+        children: registermanagerRouter()
+    },
+    {
+        path: "/admin/membermanager",
+        element: <Suspense fallback={Loading}><MemberManager /></Suspense>,
+        children: membermanagerRouter()
+    },
+    {
+        path: "/admin/noticemanager",
+        element: <Suspense fallback={Loading}><NoticeManager /></Suspense>,
+        children: noticemanagerRoutor()
     },
 ]);
 

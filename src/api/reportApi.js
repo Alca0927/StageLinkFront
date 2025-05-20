@@ -6,7 +6,7 @@ const API_SERVER_HOST = "http://localhost:8080";
 const prefix = `${API_SERVER_HOST}/api/reports`;
 
 // 불법 신고 목록 조회 (검색 포함)
-export const getReportList = async ({ page = 1, size = 10, reason = '' }) => {
+export const getList = async ({ page = 1, size = 10, reason = '' }) => {
     const res = await axios.get(`${prefix}`, {
         params: { page, size, reason }
     });
