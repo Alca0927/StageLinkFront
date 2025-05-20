@@ -9,13 +9,13 @@ const BasicMenu = () => {
                     <Link to= {'/'}>Main</Link>
                     </li>
                     <li class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    <Link to= {'/membermanager'}>회원 관리</Link>
+                    <Link to= {'/admin/membermanager'}>회원 관리</Link>
                     </li>
                     <li className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     <Link to= {'/showmanager'}>공연 관리</Link>
                     </li>
                     <li className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    <Link to= {'/notice'}>공지</Link>
+                    <Link to= {'/admin/noticemanager'}>공지</Link>
                     </li>
                     <li className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     <Link to= {'/registermanager'}>예매 관리</Link>
