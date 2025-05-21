@@ -1,6 +1,8 @@
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const BasicMenu = () => {
+    const loginState = useSelector(state => state.loginSlice)
     return (
         <div className="flex">
             <div className="w-full bg-orange-500">
@@ -8,21 +10,33 @@ const BasicMenu = () => {
                     <li className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     <Link to= {'/'}>Main</Link>
                     </li>
+                    { loginState.username ?
+                    <>
                     <li class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    <Link to= {'/membermanager'}>회원 관리</Link>
+                        <Link to= {'/admin/membermanager'}>회원 관리</Link>
                     </li>
                     <li className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    <Link to= {'/showmanager'}>공연 관리</Link>
+                        <Link to= {'/admin/showmanager'}>공연 관리</Link>
                     </li>
                     <li className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    <Link to= {'/notice'}>공지</Link>
+                        <Link to= {'/admin/notice'}>공지</Link>
                     </li>
                     <li className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    <Link to= {'/registermanager'}>예매 관리</Link>
+                        <Link to= {'/admin/registermanager'}>예매 관리</Link>
                     </li>
                     <li className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    <Link to= {'/statistic'}>통계</Link>
+                        <Link to= {'/admin/statistic'}>통계</Link>
                     </li>
+                    <li className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <Link to= {'/s/logout'}>로그아웃</Link>
+                    </li>
+                    </>
+                    :<>
+                    <li className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <Link to={'/s/login'}>로그인</Link>
+                    </li>
+                    </>
+                    }
                 </ul>
             </div>
         </div>

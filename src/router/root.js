@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import showmanagerRoutor from "./showmanagerRouter";
-import adminRoutor from "./adminRouter";
 import registermanagerRoutor from "./registermanagerRouter";
+import loginRouter from "./loginRouter";
 
 import { createBrowserRouter } from "react-router-dom";
 
@@ -10,8 +10,6 @@ const Loading = <div>Loading...</div>
 const Main = lazy(() => import("../pages/MainPage"))
 const ShowManager = lazy(() => import("../pages/ShowManager/ShowMainPage"))
 const RegisterManager = lazy(() => import("../pages/RegisterManager/RegisterMainPage"))
-const Administration = lazy(() => import("../pages/AdminMainPage"));
-
 
 const root = createBrowserRouter([
     {
@@ -19,19 +17,19 @@ const root = createBrowserRouter([
         element: <Suspense fallback={Loading}><Main/></Suspense>
     },
     {
-        path: "/showmanager",
+        path: "/admin/showmanager",
         element: <Suspense fallback={Loading}><ShowManager /></Suspense>,
         children: showmanagerRoutor()
     },
     {
-        path: "/admin",
-        element: <Suspense fallback={Loading}><Administration /></Suspense>,
-        children: adminRoutor()
-    },
-        path: "/registermanager",
+        path: "/admin/registermanager",
         element: <Suspense fallback={Loading}><RegisterManager/></Suspense>,
         children: registermanagerRoutor()
     },
+    {
+        path: "/s",
+        children: loginRouter()
+    }
 ]);
 
 export default root;

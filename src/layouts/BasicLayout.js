@@ -26,7 +26,7 @@ const BasicLayout = ({ children }) => {
             return null;
         }
     };
-
+    
     return (
         <>
             <BasicMenu />
