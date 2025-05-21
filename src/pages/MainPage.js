@@ -1,6 +1,7 @@
 import BasicLayout from "../layouts/BasicLayout";
 
 const MainPage = () => {
+
   return (
     <BasicLayout hideSidebar={true}>
       <div className="space-y-2">
@@ -10,5 +11,6 @@ const MainPage = () => {
     </BasicLayout>
   );
 };
+
 
 export default MainPage;

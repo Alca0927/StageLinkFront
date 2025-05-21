@@ -10,6 +10,7 @@ import { useLocation } from "react-router-dom";
 const BasicLayout = ({ children, hideSidebar = false }) => {
   const location = useLocation();
 
+    // 현재 경로에 따라 사이드 메뉴 선택
   const renderSideMenu = () => {
     if (location.pathname.includes("/showmanager")) {
       return <ShowSideMenu />;
