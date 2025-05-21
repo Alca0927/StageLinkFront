@@ -28,12 +28,12 @@ const BasicMenu = () => {
           <li className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
             <Link to="/admin/statistic">통계</Link>
           </li>
-          <li className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"">
+          <li className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
              <Link to= {'/s/logout'}>로그아웃</Link>
            </li>
            </>
             :<>
-            <li className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"">
+            <li className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
                <Link to={'/s/login'}>로그인</Link>
             </li>
              </>
