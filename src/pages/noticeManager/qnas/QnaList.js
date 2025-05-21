@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const QnaList = () => {
   const [qnas, setQnas] = useState([]);
@@ -8,14 +9,16 @@ const QnaList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 10;
 
+  const navigate = useNavigate();
+
   const fetchQnas = async (pageNum = 1) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/qna?page=${pageNum}&size=${pageSize}`);
+      const res = await fetch(`/api/qna/list?page=${pageNum}&size=${pageSize}`);
       if (!res.ok) throw new Error('서버 오류');
       const data = await res.json();
-      setQnas(Array.isArray(data.content) ? data.content : []);
-      setTotalPages(data.totalPages || 1);
+      setQnas(Array.isArray(data.dtoList) ? data.dtoList : []);
+      setTotalPages(typeof data.totalPage === 'number' ? data.totalPage : 1);
     } catch (err) {
       console.error('Q&A 불러오기 실패:', err);
       setError('Q&A 데이터를 불러오는 중 오류가 발생했습니다.');
@@ -58,12 +61,16 @@ const QnaList = () => {
             </tr>
           ) : (
             qnas.map(qna => (
-              <tr key={qna.questionNo} className="border-t">
+              <tr
+                key={qna.questionNo}
+                className="border-t cursor-pointer hover:bg-gray-100"
+                onClick={() => navigate(`/admin/noticemanager/qna/entry/${qna.questionNo}`)} // ✅ 수정된 경로
+              >
                 <td className="px-2 py-2 border text-center">{qna.questionNo}</td>
                 <td className="px-2 py-2 border text-center">{qna.memberNo}</td>
                 <td className="px-2 py-2 border break-words">{qna.questionContents}</td>
                 <td className="px-2 py-2 border break-words">{qna.answerContents}</td>
-                <td className="px-2 py-2 border text-center">{qna.createDate}</td>
+                <td className="px-2 py-2 border text-center">{new Date(qna.createDate).toLocaleDateString('ko-KR')}</td>
                 <td className="px-2 py-2 border text-center">{qna.qnaRating}</td>
               </tr>
             ))
@@ -71,7 +78,6 @@ const QnaList = () => {
         </tbody>
       </table>
 
-      {/* 페이지네이션 */}
       <div className="flex justify-center mt-4 space-x-2">
         {Array.from({ length: totalPages }, (_, idx) => (
           <button
