@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const NoticeList = () => {
   const [notices, setNotices] = useState([]);
@@ -7,22 +7,27 @@ const NoticeList = () => {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const pageSize = 10; // 한 페이지당 항목 수
+  const pageSize = 10;
+
+  const navigate = useNavigate();
 
   const fetchNotices = async (pageNum) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/notices?page=${pageNum}&size=${pageSize}`);
+      const res = await fetch(`/api/notices/list?page=${pageNum}&size=${pageSize}`);
       if (!res.ok) {
+        const text = await res.text();
+        console.error("📨 에러 응답 내용:", text);
         throw new Error("서버 오류");
       }
+
       const data = await res.json();
-      setNotices(Array.isArray(data.content) ? data.content : []);
-      setTotalPages(data.totalPages || 1);
-      setLoading(false);
+      setNotices(Array.isArray(data.dtoList) ? data.dtoList : []);
+      setTotalPages(typeof data.totalPage === 'number' ? data.totalPage : 1);
     } catch (err) {
-      console.error("공지사항 불러오기 실패:", err);
+      console.error("❌ 공지사항 불러오기 실패:", err);
       setError("공지사항을 불러오는 중 오류가 발생했습니다.");
+    } finally {
       setLoading(false);
     }
   };
@@ -58,28 +63,29 @@ const NoticeList = () => {
             </tr>
           ) : (
             notices.map(notice => (
-              <tr key={notice.notice_no} className="border-t">
-                <td className="px-4 py-2 border text-center">{notice.notice_no}</td>
-                <td className="px-4 py-2 border break-words">
-                  <Link to={`/notice/${notice.notice_no}`} className="text-blue-600 hover:underline">
-                    {notice.noticeTitle}
-                  </Link>
+              <tr
+                key={notice.noticeNo}
+                className="border-t cursor-pointer hover:bg-gray-100"
+                onClick={() => navigate(`/admin/noticemanager/notices/${notice.noticeNo}`)}  // ✅ 수정됨
+              >
+                <td className="px-4 py-2 border text-center">{notice.noticeNo}</td>
+                <td className="px-4 py-2 border break-words">{notice.noticeTitle}</td>
+                <td className="px-4 py-2 border text-center">
+                  {new Date(notice.noticeDate).toLocaleDateString('ko-KR')}
                 </td>
-                <td className="px-4 py-2 border text-center">{notice.notice_date}</td>
               </tr>
             ))
           )}
         </tbody>
       </table>
 
-      {/* 페이지네이션 */}
       <div className="flex justify-center mt-4 space-x-2">
         {Array.from({ length: totalPages }, (_, idx) => (
           <button
             key={idx + 1}
             onClick={() => setPage(idx + 1)}
-            className={`px-3 py-1 rounded ${
-              page === idx + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200'
+            className={`px-3 py-1 rounded font-bold ${
+              page === idx + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
             }`}
           >
             {idx + 1}

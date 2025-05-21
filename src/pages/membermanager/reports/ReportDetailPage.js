@@ -9,14 +9,20 @@ const ReportDetailPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('reportNo:', reportNo);
+
     const fetchReportDetail = async () => {
       try {
         const response = await axios.get(`/api/reports/${reportNo}`);
         setReport(response.data);
         setError(null);
       } catch (err) {
-        console.error('신고 상세 조회 실패:', err);
-        if (err.response && err.response.status === 404) {
+        console.error('❌ 신고 상세 조회 실패:', err);
+        console.log('🔍 에러 메시지:', err.message);
+        console.log('📡 요청 객체:', err.request);
+        console.log('📨 응답 객체:', err.response);
+
+        if (err.response?.status === 404) {
           setError('유효하지 않은 신고 번호입니다.');
         } else {
           setError('신고 정보를 불러오는 데 실패했습니다.');
@@ -54,7 +60,7 @@ const ReportDetailPage = () => {
           <div><strong>게시글 번호:</strong> {report.postNo}</div>
           <div><strong>신고자 ID:</strong> {report.reporterId}</div>
           <div><strong>피신고자 ID:</strong> {report.suspectId}</div>
-          <div><strong>신고일자:</strong> {report.reportDate}</div>
+          <div><strong>신고일자:</strong> {new Date(report.reportDate).toLocaleDateString('ko-KR')}</div>
           <div className="col-span-2"><strong>신고 사유:</strong> {report.reportReason}</div>
         </div>
 

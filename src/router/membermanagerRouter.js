@@ -2,11 +2,11 @@ import { Suspense, lazy } from "react";
 
 const Loading = <div>Loading...</div>
 // member List
-const MemberList = lazy(() => import("../pages/memberManager/members/MemberList"))
-const ReportList = lazy(() => import("../pages/memberManager/reports/ReportList"))
+const MemberList = lazy(() => import("../pages/membermanager/members/MemberList"))
+const ReportList = lazy(() => import("../pages/membermanager/reports/ReportList"))
 // member detail
-const MemberDetail = lazy(() => import("../pages/memberManager/members/MemberDetailPage"))
-const ReportDetail = lazy(() => import("../pages/memberManager/reports/ReportDetailPage"))
+const MemberDetail = lazy(() => import("../pages/membermanager/members/MemberDetailPage"))
+const ReportDetail = lazy(() => import("../pages/membermanager/reports/ReportDetailPage"))
 
 const membermanagerRoutor = () => {
     return[
@@ -23,7 +23,7 @@ const membermanagerRoutor = () => {
             element : <Suspense fallback={Loading}><MemberDetail/></Suspense>
         },
         {
-            path: "reports/:report_no",
+            path: "reports/:reportNo",
             element : <Suspense fallback={Loading}><ReportDetail/></Suspense>
         }
     ]
