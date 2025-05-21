@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import showmanagerRoutor from "./showmanagerRouter";
 
-import registermanagerRoutor from "./registermanagerRouter";
+import registermanagerRouter from "./registermanagerRouter"
 import membermanagerRouter from "./membermanagerRouter";
 import noticemanagerRoutor from "./noticemanagerRouter";
 import loginRouter from "./loginRouter";
