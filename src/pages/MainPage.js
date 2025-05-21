@@ -1,13 +1,16 @@
 import BasicLayout from "../layouts/BasicLayout";
 
 const MainPage = () => {
-    return (
-        <BasicLayout>
-            <div className="text-center font-extrabold ">Main Page</div>
-            <div className="text-center font-bold h-screen">Welcome Admin</div>
-        </BasicLayout>
-        
-    );
-}
+
+  return (
+    <BasicLayout hideSidebar={true}>
+      <div className="space-y-2">
+        <h1 className="text-2xl font-bold">Main Page</h1>
+        <p className="text-lg">Welcome Admin</p>
+      </div>
+    </BasicLayout>
+  );
+};
+
 
 export default MainPage;

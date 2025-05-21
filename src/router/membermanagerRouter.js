@@ -2,28 +2,28 @@ import { Suspense, lazy } from "react";
 
 const Loading = <div>Loading...</div>
 // member List
-const MemberList = lazy(() => import("../pages/members/MemberList"))
-const ReportList = lazy(() => import("../pages/reports/ReportList"))
+const MemberList = lazy(() => import("../pages/membermanager/members/MemberList"))
+const ReportList = lazy(() => import("../pages/membermanager/reports/ReportList"))
 // member detail
-const MemberDetail = lazy(() => import("../pages/members/MemberDetailPage"))
-const ReportDetail = lazy(() => import("../pages/reports/ReportDetailPage"))
+const MemberDetail = lazy(() => import("../pages/membermanager/members/MemberDetailPage"))
+const ReportDetail = lazy(() => import("../pages/membermanager/reports/ReportDetailPage"))
 
 const membermanagerRoutor = () => {
     return[
         {
-            path: "memberlist",
+            path: "members/list",
             element : <Suspense fallback={Loading}><MemberList/></Suspense>
         },
         {
-            path: "reportlist",
+            path: "reports/list",
             element : <Suspense fallback={Loading}><ReportList/></Suspense>
         },
         {
-            path: "memberlist/:member_no",
+            path: "members/:member_no",
             element : <Suspense fallback={Loading}><MemberDetail/></Suspense>
         },
         {
-            path: "reportlist/:report_no",
+            path: "reports/:reportNo",
             element : <Suspense fallback={Loading}><ReportDetail/></Suspense>
         }
     ]

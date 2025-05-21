@@ -1,13 +1,13 @@
 import BasicLayout from "../../layouts/BasicLayout";
 import { Outlet } from "react-router-dom";
 
-const memberMainPage = () => {
+const noticeMainPage = () => {
     return (
         <BasicLayout>
-            <div>member Main Page</div>
+            <div>notice Main Page</div>
             <Outlet/>
         </BasicLayout>
     );
 }
 
-export default memberMainPage;
+export default noticeMainPage

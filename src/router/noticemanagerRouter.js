@@ -1,31 +1,39 @@
 import { Suspense, lazy } from "react";
+import NoticeRegister from "../pages/noticeManager/notices/NoticeRegister";
+import NoticeDetail from "../pages/noticeManager/notices/NoticeDetail";
+
 
 const Loading = <div>Loading...</div>
 // Notice / Q&A List
-const NoticeList = lazy(() => import("../pages/notices/NoticeList"))
-const QnaList = lazy(() => import("../pages/qnas/QnaList"))
+const NoticeList = lazy(() => import("../pages/noticeManager/notices/NoticeList"))
+const QnaList = lazy(() => import("../pages/noticeManager/qnas/QnaList"))
 // Notice / Q&A detail
-const NoticeCreate = lazy(() => import("../pages/notices/NoticeCreate"))
-const QnaDetail = lazy(() => import("../pages/qnas/QnaEntry"))
+const QnaEntry = lazy(() => import("../pages/noticeManager/qnas/QnaEntry"))
 
 const noticemanagerRoutor = () => {
     return[
         {
-            path: "noticelist",
+            path: "notices/list",
             element : <Suspense fallback={Loading}><NoticeList/></Suspense>
         },
         {
-            path: "Qnalist",
+            path: "notices/:noticeNo",
+            element : <Suspense fallback={Loading}><NoticeDetail/></Suspense>
+        },
+        {
+            path: "notices/register",
+            element : <Suspense fallback={Loading}><NoticeRegister/></Suspense>
+        },
+        {
+            path: "Q&A/list",
             element : <Suspense fallback={Loading}><QnaList/></Suspense>
         },
+        
         {
-            path: "noticelist/:notice_no",
-            element : <Suspense fallback={Loading}><NoticeCreate/></Suspense>
-        },
-        {
-            path: "Qnalist/:qna_no",
-            element : <Suspense fallback={Loading}><QnaDetail/></Suspense>
+            path: "qna/entry/:questionNo",
+            element : <Suspense fallback={Loading}><QnaEntry/></Suspense>
         }
+        
     ]
 }
 
