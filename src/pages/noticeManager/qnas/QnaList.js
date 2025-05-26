@@ -13,8 +13,14 @@ const QnaList = () => {
 
   const fetchQnas = async (pageNum = 1) => {
     setLoading(true);
+    const token = localStorage.getItem("accessToken"); // ✅ JWT 토큰 가져오기
+
     try {
-      const res = await fetch(`/api/qna/list?page=${pageNum}&size=${pageSize}`);
+      const res = await fetch(`/api/qna/list?page=${pageNum}&size=${pageSize}`, {
+        headers: {
+          Authorization: `Bearer ${token}` // ✅ 인증 헤더 추가
+        }
+      });
       if (!res.ok) throw new Error('서버 오류');
       const data = await res.json();
       setQnas(Array.isArray(data.dtoList) ? data.dtoList : []);
@@ -64,7 +70,7 @@ const QnaList = () => {
               <tr
                 key={qna.questionNo}
                 className="border-t cursor-pointer hover:bg-gray-100"
-                onClick={() => navigate(`/admin/noticemanager/qna/entry/${qna.questionNo}`)} // ✅ 수정된 경로
+                onClick={() => navigate(`/admin/noticemanager/qna/entry/${qna.questionNo}`)}
               >
                 <td className="px-2 py-2 border text-center">{qna.questionNo}</td>
                 <td className="px-2 py-2 border text-center">{qna.memberNo}</td>

@@ -11,18 +11,28 @@ const MemberList = () => {
   const navigate = useNavigate();
 
   const fetchMembers = async (pageNum = 1, name = '') => {
+    const token = localStorage.getItem("accessToken"); // JWT 토큰 로컬스토리지에서 가져오기
+
     try {
-      const response = await axios.get(`/api/members`, {
+      const response = await axios.get('/api/members', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
         params: { page: pageNum, name }
       });
+
       console.log("🔥 서버 응답:", response.data);
       setMembers(response.data.dtoList || []);
       setTotalPages(response.data.totalPage || 1);
       setError(null);
     } catch (error) {
       console.error('❗ 회원 목록 조회 실패:', error);
+      const message =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        '서버와의 연결에 문제가 있습니다.';
       setMembers([]);
-      setError('서버와의 연결에 문제가 있습니다.');
+      setError(message);
     }
   };
 
@@ -34,9 +44,6 @@ const MemberList = () => {
     setPage(1);
     fetchMembers(1, searchName);
   };
-
-  console.log("✅ members:", members);
-  console.log("✅ error:", error);
 
   return (
     <div className="flex max-w-6xl mx-auto mt-8">
@@ -85,14 +92,16 @@ const MemberList = () => {
                 </td>
               </tr>
             ) : (
-              members.map(member => (
+              members.map((member) => (
                 <tr
                   key={member.memberNo}
                   className="bg-gray-100 cursor-pointer"
-                  onClick={() => navigate(`/admin/membermanager/members/${member.memberNo}`)}
+                  onClick={() =>
+                    navigate(`/admin/membermanager/members/${member.memberNo}`)
+                  }
                 >
                   <td className="px-4 py-2 border text-center">{member.memberNo}</td>
-                  <td className="px-4 py-2 border text-center">{member.memberId}</td>
+                  <td className="px-4 py-2 border text-center">{member.userId}</td>
                   <td className="px-4 py-2 border text-center">{member.name}</td>
                   <td className="px-4 py-2 border text-center">{member.userEmail}</td>
                   <td className="px-4 py-2 border text-center">{member.memberState}</td>
@@ -108,7 +117,9 @@ const MemberList = () => {
             <button
               key={idx + 1}
               onClick={() => setPage(idx + 1)}
-              className={`px-3 py-1 rounded ${page === idx + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+              className={`px-3 py-1 rounded ${
+                page === idx + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200'
+              }`}
             >
               {idx + 1}
             </button>

@@ -13,8 +13,15 @@ const NoticeList = () => {
 
   const fetchNotices = async (pageNum) => {
     setLoading(true);
+    const token = localStorage.getItem("accessToken"); // ✅ JWT 토큰 가져오기
+
     try {
-      const res = await fetch(`/api/notices/list?page=${pageNum}&size=${pageSize}`);
+      const res = await fetch(`/api/notices/list?page=${pageNum}&size=${pageSize}`, {
+        headers: {
+          Authorization: `Bearer ${token}` // ✅ 인증 헤더 추가
+        }
+      });
+
       if (!res.ok) {
         const text = await res.text();
         console.error("📨 에러 응답 내용:", text);
@@ -66,7 +73,7 @@ const NoticeList = () => {
               <tr
                 key={notice.noticeNo}
                 className="border-t cursor-pointer hover:bg-gray-100"
-                onClick={() => navigate(`/admin/noticemanager/notices/${notice.noticeNo}`)}  // ✅ 수정됨
+                onClick={() => navigate(`/admin/noticemanager/notices/${notice.noticeNo}`)}
               >
                 <td className="px-4 py-2 border text-center">{notice.noticeNo}</td>
                 <td className="px-4 py-2 border break-words">{notice.noticeTitle}</td>

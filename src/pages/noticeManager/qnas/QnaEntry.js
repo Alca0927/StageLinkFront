@@ -10,10 +10,15 @@ const QnaEntry = () => {
 
   // 질문 + 기존 답변 내용 불러오기
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
     const url = `http://localhost:8080/api/qna/${questionNo}`;
     console.log("📡 요청 URL:", url);
 
-    fetch(url)
+    fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(res => {
         console.log("📥 응답 상태 코드:", res.status);
         if (!res.ok) throw new Error("질문 불러오기 실패");
@@ -36,20 +41,25 @@ const QnaEntry = () => {
   // 답변 등록
   const handleSubmit = (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("accessToken");
+
     const qna = {
       questionNo: parseInt(questionNo),
       answerContents,
       qnaRating: parseInt(qnaRating)
     };
+
     fetch(`http://localhost:8080/api/qna/${questionNo}/answer`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
       body: JSON.stringify(qna)
     })
       .then(res => {
         if (!res.ok) throw new Error("등록 실패");
         alert('답변이 등록되었습니다.');
-        // 기존 입력값 유지
       })
       .catch(err => {
         console.error("❌ 등록 오류:", err);

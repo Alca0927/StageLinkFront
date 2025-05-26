@@ -19,14 +19,25 @@ export const getList = async (pageParam) => {
   }
 };
 
-// 회원 상세
+// 회원 상세 조회
 export const getOne = async (memberNo) => {
   const res = await axios.get(`${prefix}/${memberNo}`);
   return res.data;
 };
 
-// 상태 변경
+// 회원 상태 변경
 export const updateState = async (member) => {
   const res = await axios.put(`${prefix}/${member.memberNo}/state`, member);
   return res.data;
+};
+
+// ✅ 회원 수 조회
+export const getCount = async () => {
+  try {
+    const res = await axios.get(`${prefix}/count`);
+    return res.data.count; // { count: 숫자 }
+  } catch (err) {
+    console.error("⚠️ 회원 수 조회 실패:", err);
+    throw new Error("회원 수를 가져오는 중 오류가 발생했습니다.");
+  }
 };
