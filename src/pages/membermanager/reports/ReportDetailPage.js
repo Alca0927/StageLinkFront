@@ -12,8 +12,13 @@ const ReportDetailPage = () => {
     console.log('reportNo:', reportNo);
 
     const fetchReportDetail = async () => {
+      const token = localStorage.getItem("accessToken"); // ✅ JWT 토큰 가져오기
       try {
-        const response = await axios.get(`/api/reports/${reportNo}`);
+        const response = await axios.get(`/api/reports/${reportNo}`, {
+          headers: {
+            Authorization: `Bearer ${token}` // ✅ 인증 헤더 추가
+          }
+        });
         setReport(response.data);
         setError(null);
       } catch (err) {
@@ -78,17 +83,6 @@ const ReportDetailPage = () => {
             출력
           </button>
         </div>
-      </div>
-
-      {/* 사이드바 */}
-      <div className="w-1/4 border-l pl-6">
-        <h3 className="text-lg font-semibold mb-4">관리 메뉴</h3>
-        <button
-          onClick={() => navigate('/admin/membermanager')}
-          className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-        >
-          회원 관리
-        </button>
       </div>
     </div>
   );

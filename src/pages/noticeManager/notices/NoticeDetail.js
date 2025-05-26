@@ -16,8 +16,14 @@ const NoticeDetail = () => {
     }
 
     const fetchNotice = async () => {
+      const token = localStorage.getItem("accessToken"); // ✅ JWT 토큰 가져오기
       try {
-        const res = await fetch(`/api/notices/${noticeNo}`);
+        const res = await fetch(`/api/notices/${noticeNo}`, {
+          headers: {
+            Authorization: `Bearer ${token}` // ✅ 인증 헤더 추가
+          }
+        });
+
         if (!res.ok) {
           const text = await res.text();
           console.error("❌ 서버 응답 오류:", text);

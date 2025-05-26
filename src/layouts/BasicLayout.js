@@ -10,7 +10,6 @@ import { useLocation } from "react-router-dom";
 const BasicLayout = ({ children, hideSidebar = false }) => {
   const location = useLocation();
 
-    // 현재 경로에 따라 사이드 메뉴 선택
   const renderSideMenu = () => {
     if (location.pathname.includes("/showmanager")) {
       return <ShowSideMenu />;
@@ -28,9 +27,9 @@ const BasicLayout = ({ children, hideSidebar = false }) => {
   };
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <BasicMenu />
-      <div className="w-full flex flex-col md:flex-row mt-1 mb-5 bg-gray-50 space-y-1 md:space-y-0 md:space-x-2">
+      <div className="flex-grow w-full flex flex-col md:flex-row bg-gray-50 space-y-0 md:space-y-0 md:space-x-2">
         <main className={`${hideSidebar ? 'w-full' : 'md:w-4/5 lg:w-3/4'} bg-sky-100 text-gray-800 px-5 py-5`}>
           {children}
         </main>
@@ -40,7 +39,7 @@ const BasicLayout = ({ children, hideSidebar = false }) => {
           </aside>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

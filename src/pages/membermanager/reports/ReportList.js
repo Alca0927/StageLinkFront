@@ -11,8 +11,13 @@ const ReportList = () => {
   const navigate = useNavigate();
 
   const fetchReports = async () => {
+    const token = localStorage.getItem("accessToken"); // ✅ JWT 토큰 가져오기
+
     try {
       const response = await axios.get('/api/reports', {
+        headers: {
+          Authorization: `Bearer ${token}` // ✅ 인증 헤더 포함
+        },
         params: {
           reason: searchReason,
           page: currentPage,
@@ -30,7 +35,7 @@ const ReportList = () => {
 
   useEffect(() => {
     fetchReports();
-  }, [currentPage]); // 검색어 변경 시에는 실행되지 않도록 변경
+  }, [currentPage]);
 
   const handleSearch = () => {
     setCurrentPage(1);
@@ -84,7 +89,7 @@ const ReportList = () => {
                 onClick={() => navigate(`/admin/membermanager/reports/${report.reportNo}`)}
               >
                 <td className="px-4 py-2 border text-center">{report.reportNo}</td>
-                <td className="px-4 py-2 border text-center">{report.reporterId}</td>
+                <td className="px-4 py-2 border text-center">{report.reportedId}</td>
                 <td className="px-4 py-2 border text-center">{report.postNo}</td>
                 <td className="px-4 py-2 border break-words">{report.reportReason}</td>
               </tr>
