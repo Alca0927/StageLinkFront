@@ -21,7 +21,11 @@ const ActorList = lazy(() => import("../pages/ShowManager/actor/ListPage"))
 const ActorAdd = lazy(() => import("../pages/ShowManager/actor/AddPage"))
 const ActorModify = lazy(() => import("../pages/ShowManager/actor/ModifyPage"))
 const ActorRead = lazy(() => import("../pages/ShowManager/actor/ReadPage"))
-
+// actorshow
+const ActorShowList = lazy(() => import("../pages/ShowManager/actorshow/ListPage"))
+const ActorShowAdd = lazy(() => import("../pages/ShowManager/actorshow/AddPage"))
+const ActorShowModify = lazy(() => import("../pages/ShowManager/actorshow/ModifyPage"))
+const ActorShowRead = lazy(() => import("../pages/ShowManager/actorshow/ReadPage"))
 
 const showmanagerRoutor = () => {
     return[
@@ -86,13 +90,30 @@ const showmanagerRoutor = () => {
             element : <Suspense fallback={Loading}><ActorAdd/></Suspense>
         },
         {
-            path: "actor/read/:actorno",
+            path: "actor/read/:actorNo",
             element : <Suspense fallback={Loading}><ActorRead/></Suspense>
         },
         {
-            path: "actor/modify/:actorno",
+            path: "actor/modify/:actorNo",
             element : <Suspense fallback={Loading}><ActorModify/></Suspense>
-        }
+        },
+        // actorshow
+        {
+            path: "actorshow/list",
+            element : <Suspense fallback={Loading}><ActorShowList/></Suspense>
+        },
+        {
+            path: "actorshow/add",
+            element : <Suspense fallback={Loading}><ActorShowAdd/></Suspense>
+        },
+        {
+            path: "actorshow/read/:actorNo/:showinfo",
+            element : <Suspense fallback={Loading}><ActorShowRead/></Suspense>
+        },
+        {
+            path: "actorshow/modify/:actorNo/:showinfo",
+            element : <Suspense fallback={Loading}><ActorShowModify/></Suspense>
+        },
     ]
 }
 
