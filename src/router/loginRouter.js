@@ -1,5 +1,5 @@
 import { Suspense,lazy } from "react";
-import LogoutPage from "../pages/login/LogoutPage";
+
 const Loading = <div>Loading...</div>
 const Login = lazy(() => import("../pages/login/LoginPage"))
 const Logout = lazy(() => import("../pages/login/LogoutPage"))
@@ -12,7 +12,7 @@ const loginRouter = () => {
         },
         {
             path:"logout",
-            element:<Suspense fallback={Loading}><LogoutPage/></Suspense>    
+            element:<Suspense fallback={Loading}><Logout/></Suspense>    
         }
     ]
 }

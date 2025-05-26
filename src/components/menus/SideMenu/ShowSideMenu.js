@@ -7,6 +7,7 @@ const ShowSideMenu = () => {
             <Link to="/admin/showmanager/showinfo/list">공연 상세 목록</Link>
             <Link to="/admin/showmanager/location/list">공연장 목록</Link>
             <Link to="/admin/showmanager/actor/list">배우 목록</Link>
+            <Link to="/admin/showmanager/actorshow/list">배우 출연작 목록</Link>
         </div>
     );
 };
