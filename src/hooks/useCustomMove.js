@@ -21,24 +21,22 @@ const useCustomMove = () => {
 
   const moveToList = (pageParam, path) => {
 
-  let queryStr = ""
+    let queryStr = ""
 
-  if(pageParam){
+    if(pageParam){
+      const pageNum = getNum(pageParam.page, page)
+      const sizeNum = getNum(pageParam.size, size)
+      queryStr = createSearchParams({page:pageNum, size: sizeNum}).toString()
+    }else {
+      queryStr = queryDefault
+    }
 
-    const pageNum = getNum(pageParam.page, page)
-    const sizeNum = getNum(pageParam.size, size)
+    navigate({
+      pathname: `../${path}/list`,
+      search:queryStr
+    })
 
-    queryStr = createSearchParams({page:pageNum, size: sizeNum}).toString()
-  }else {
-    queryStr = queryDefault
-  }
-
-  navigate({
-    pathname: `../${path}/list`,
-    search:queryStr
-  })
-
-  setRefresh(!refresh) //추가 
+    //setRefresh(!refresh) //추가 
 
   }
 

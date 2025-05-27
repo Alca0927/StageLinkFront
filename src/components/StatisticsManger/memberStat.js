@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getMemberStat, getPrevMonthStat } from '../../api/StatApi';
 
-const MemberStat = ({ year: initialYear, month: initialMonth }) => {
+const StatComponent = ({ year: initialYear, month: initialMonth }) => {
     const navigate = useNavigate();
     
     // 현재 년월 상태
@@ -104,8 +104,58 @@ const MemberStat = ({ year: initialYear, month: initialMonth }) => {
     // 로딩 중 표시
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64">
-                <div className="text-lg">데이터를 불러오는 중...</div>
+            <div className="space-y-6">
+                {/* 검색 영역 */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="flex items-center space-x-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                년도
+                            </label>
+                            <select
+                                value={selectedYear}
+                                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                {generateYearOptions().map(year => (
+                                    <option key={year} value={year}>
+                                        {year}년
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                월
+                            </label>
+                            <select
+                                value={selectedMonth}
+                                onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                {generateMonthOptions().map(month => (
+                                    <option key={month} value={month}>
+                                        {month}월
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        
+                        <div className="pt-6">
+                            <button
+                                onClick={handleSearch}
+                                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                검색
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="flex justify-center items-center h-64">
+                    <div className="text-lg">데이터를 불러오는 중...</div>
+                </div>
             </div>
         );
     }
@@ -113,20 +163,70 @@ const MemberStat = ({ year: initialYear, month: initialMonth }) => {
     // 에러 표시
     if (error) {
         return (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <div className="text-red-800">{error}</div>
-                <button 
-                    onClick={fetchStatData}
-                    className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                >
-                    다시 시도
-                </button>
+            <div className="space-y-6">
+                {/* 검색 영역 */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="flex items-center space-x-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                년도
+                            </label>
+                            <select
+                                value={selectedYear}
+                                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                {generateYearOptions().map(year => (
+                                    <option key={year} value={year}>
+                                        {year}년
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                월
+                            </label>
+                            <select
+                                value={selectedMonth}
+                                onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                {generateMonthOptions().map(month => (
+                                    <option key={month} value={month}>
+                                        {month}월
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        
+                        <div className="pt-6">
+                            <button
+                                onClick={handleSearch}
+                                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                검색
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="text-red-800">{error}</div>
+                    <button 
+                        onClick={fetchStatData}
+                        className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                    >
+                        다시 시도
+                    </button>
+                </div>
             </div>
         );
     }
 
     // 통계 데이터가 없는 경우
-    if (!hasCurrentData) {
+    if (!hasCurrentData || !currentStat) {
         return (
             <div className="space-y-6">
                 {/* 검색 영역 */}
@@ -185,16 +285,16 @@ const MemberStat = ({ year: initialYear, month: initialMonth }) => {
         );
     }
 
-    // 증감률 계산 (currentStat이 있을 때만)
-    const memberSumChange = currentStat ? calculateChangeRate(
-        currentStat.memberSum, 
-        prevStat?.memberSum
-    ) : { rate: 0, isIncrease: true };
+    // 증감률 계산 (currentStat이 확실히 있을 때만)
+    const memberSumChange = calculateChangeRate(
+        currentStat.memberSum || 0, 
+        prevStat?.memberSum || 0
+    );
     
-    const joinedMemberChange = currentStat ? calculateChangeRate(
-        currentStat.joinedMember, 
-        prevStat?.joinedMember
-    ) : { rate: 0, isIncrease: true };
+    const joinedMemberChange = calculateChangeRate(
+        currentStat.joinedMember || 0, 
+        prevStat?.joinedMember || 0
+    );
 
     return (
         <div className="space-y-6">
@@ -326,4 +426,4 @@ const MemberStat = ({ year: initialYear, month: initialMonth }) => {
     );
 };
 
-export default MemberStat;
+export default StatComponent;

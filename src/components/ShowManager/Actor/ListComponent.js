@@ -9,7 +9,7 @@ const initState = {
   pageRequestDTO: null,
   prev: false,
   next: false,
-  totoalCount: 0,
+  totalCount: 0,
   prevPage: 0,
   nextPage: 0,
   totalPage: 0,
@@ -22,12 +22,15 @@ const ListComponent = () => {
     const [serverData, setServerData] = useState(initState)
 
     useEffect(() => {
+      console.log('useEffect 실행됨 - pageParam 변경:', page,size);
       getList({page,size}).then(data => {
-        console.log(data)
+        console.log('API 응답 데이터:',data)
+        console.log('새로운 current 페이지:', data.current);
         setServerData(data)
       })
     }, [page,size,refresh])
 
+    
     return (
       <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">
   
@@ -58,7 +61,7 @@ const ListComponent = () => {
         </div>
         )}
       </div>
-        <PageComponent serverData={serverData} movePage={() => moveToList(null, "actor")}></PageComponent>
+        <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "actor")}></PageComponent>
     </div>
     );
 }
