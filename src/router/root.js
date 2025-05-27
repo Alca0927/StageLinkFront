@@ -5,6 +5,7 @@ import registermanagerRouter from "./registermanagerRouter"
 import membermanagerRouter from "./membermanagerRouter";
 import noticemanagerRoutor from "./noticemanagerRouter";
 import loginRouter from "./loginRouter";
+import statisticsRouter from "./statisticsRouter";
 
 
 import { createBrowserRouter } from "react-router-dom";
@@ -17,6 +18,7 @@ const ShowManager = lazy(() => import("../pages/showmanager/ShowMainPage"))
 const RegisterManager = lazy(() => import("../pages/RegisterManager/RegisterMainPage"))
 const MemberManager = lazy(() => import("../pages/membermanager/MemberMainPage"));
 const NoticeManager = lazy(() => import("../pages/noticeManager/noticeMainPage"));
+const StatisticsManager = lazy(() => import("../pages/statisticsManager/StatisticsMainPage"))
 
 
 const root = createBrowserRouter([
@@ -47,6 +49,11 @@ const root = createBrowserRouter([
     {
         path: "/s",
         children: loginRouter()
+    },
+    {
+        path: "/admin/statisticsmanager",
+        element: <Suspense fallback={Loading}><StatisticsManager/></Suspense>,
+        children: statisticsRouter()
     }
 ]);
 
