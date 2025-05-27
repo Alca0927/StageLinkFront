@@ -15,7 +15,7 @@ const Loading = <div>Loading...</div>;
 const Main = lazy(() => import("../pages/MainPage"))
 const ShowManager = lazy(() => import("../pages/showmanager/ShowMainPage"))
 const RegisterManager = lazy(() => import("../pages/RegisterManager/RegisterMainPage"))
-const MemberManager = lazy(() => import("../pages/membermanager/MemberMainPage"));
+const MemberManager = lazy(() => import("../pages/memberManager/MemberMainPage"));
 const NoticeManager = lazy(() => import("../pages/noticeManager/noticeMainPage"));
 
 
