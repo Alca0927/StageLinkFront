@@ -9,7 +9,7 @@ const initState = {
   pageRequestDTO: null,
   prev: false,
   next: false,
-  totoalCount: 0,
+  totalCount: 0,
   prevPage: 0,
   nextPage: 0,
   totalPage: 0,
@@ -28,6 +28,7 @@ const ListComponent = () => {
       })
     }, [page,size,refresh])
 
+    
     return (
       <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">
   
@@ -58,7 +59,7 @@ const ListComponent = () => {
         </div>
         )}
       </div>
-        <PageComponent serverData={serverData} movePage={() => moveToList(null, "show")}></PageComponent>
+        <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "show")}></PageComponent>
     </div>
     );
 }

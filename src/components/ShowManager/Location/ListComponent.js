@@ -29,6 +29,7 @@ const ListComponent = () => {
       })
     }, [page,size,refresh])
 
+    
     return (
       <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">
   
@@ -68,7 +69,7 @@ const ListComponent = () => {
         </div>
         )}
       </div>
-        <PageComponent serverData={serverData} movePage={() => moveToList(null, "location")}></PageComponent>
+        <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "location")}></PageComponent>
     </div>
     );
 }

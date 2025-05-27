@@ -15,11 +15,11 @@ const statisticsRouter = () => {
         },
         {
             path: "sales/:year/:month",
-            element : <Suspense fallback={Loading}><RegisterStat/></Suspense>
+            element : <Suspense fallback={Loading}><SalesStat/></Suspense>
         },
         {
             path: "register/:showNo",
-            element : <Suspense fallback={Loading}><SalesStat/></Suspense>
+            element : <Suspense fallback={Loading}><RegisterStat/></Suspense>
         }
     ]
 }

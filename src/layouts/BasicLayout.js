@@ -17,9 +17,9 @@ const BasicLayout = ({ children, hideSidebar = false }) => {
       return <MemberSideMenu />;
     } else if (location.pathname.includes("/noticemanager")) {
       return <NoticeSideMenu />;
-    } else if (location.pathname.includes("/register")) {
+    } else if (location.pathname.includes("/registermanager")) {
       return <RegisterSideMenu />;
-    } else if (location.pathname.includes("/statistic")) {
+    } else if (location.pathname.includes("/statisticsmanager")) {
       return <StatisticSideMenu />;
     } else {
       return null;

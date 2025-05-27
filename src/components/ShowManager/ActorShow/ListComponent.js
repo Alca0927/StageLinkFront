@@ -27,6 +27,11 @@ const ListComponent = () => {
         });
     }, [page, size, refresh]);
 
+    // movePage 함수를 제대로 정의
+    const movePage = (pageParam) => {
+        moveToList(pageParam, "reservation");
+    }
+    
     return (
         <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">
             
