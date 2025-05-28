@@ -5,7 +5,9 @@ import registermanagerRouter from "./registermanagerRouter"
 import membermanagerRouter from "./membermanagerRouter";
 import noticemanagerRoutor from "./noticemanagerRouter";
 import loginRouter from "./loginRouter";
+import LoginPage from "../pages/login/LoginPage";
 import statisticsRouter from "./statisticsRouter";
+
 
 
 import { createBrowserRouter } from "react-router-dom";
@@ -24,6 +26,10 @@ const StatisticsManager = lazy(() => import("../pages/statisticsManager/Statisti
 const root = createBrowserRouter([
     {
         path: "/",
+        element: <Suspense fallback={Loading}><LoginPage /></Suspense>
+    },
+    {
+        path: "/main",
         element: <Suspense fallback={Loading}><Main /></Suspense>
     },
     {

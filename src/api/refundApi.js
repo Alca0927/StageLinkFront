@@ -1,5 +1,6 @@
 import jwtAxios from "../util/jwtUtil";
-import { API_SERVER_HOST } from "./showApi";
+import { API_SERVER_HOST } from "../config/server";
+
 
 // 서버 주소
 const prefix = `${API_SERVER_HOST}/registermanager/refund`

@@ -1,7 +1,5 @@
 import jwtAxios from "../util/jwtUtil"
-
-// 서버 주소
-export const API_SERVER_HOST = "http://localhost:8080/admin"
+import { API_SERVER_HOST } from "../config/server"
 
 const prefix = `${API_SERVER_HOST}/showmanager/show`
 

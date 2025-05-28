@@ -1,44 +1,47 @@
-import jwtAxios from "../util/jwtUtil";
-import { API_SERVER_HOST } from "./showApi";
-// 서버 주소
+import axios from 'axios';
+import { API_SERVER_HOST } from "../config/server";
 
-const prefix = `${API_SERVER_HOST}/showmanager/location`
-/*
-export const getOne = async (showlocation) => {
-    const res = await axios.get(`${prefix}/${showlocation}`)
 
-    return res.data
-}
-*/
+const prefix = `${API_SERVER_HOST}/showmanager/location`;
+
 export const getOne = async (showlocation) => {
-    if (!showlocation) {
-        throw new Error("showlocation is required");
+  const token = localStorage.getItem("accessToken");
+  const res = await axios.get(`${prefix}/${showlocation}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
-    
-    const res = await jwtAxios.get(`${prefix}/${showlocation}`);
-    return res.data;
-}
+  });
+  return res.data;
+};
 
 export const getList = async (pageParam) => {
-    const {page, size} = pageParam
-    const res = await jwtAxios.get(`${prefix}/list`, {params: {page:page, size:size}})
-
-    return res.data
-}
+  const { page, size } = pageParam;
+  const token = localStorage.getItem("accessToken");
+  const res = await axios.get(`${prefix}/list`, {
+    params: { page, size },
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return res.data;
+};
 
 export const postAdd = async (locationObj) => {
-    const res = await jwtAxios.post(`${prefix}/`, locationObj)
-    return res.data
-}
-
-/*
-export const deleteOne = async (tno) => {
-  const res = await jwtAxios.delete(`${prefix}/${tno}` )
-  return res.data
-}
-*/
+  const token = localStorage.getItem("accessToken");
+  const res = await axios.post(`${prefix}/`, locationObj, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return res.data;
+};
 
 export const putOne = async (location) => {
-  const res = await jwtAxios.put(`${prefix}/${location.showlocation}`, location)
-  return res.data
-}
+  const token = localStorage.getItem("accessToken");
+  const res = await axios.put(`${prefix}/${location.showlocation}`, location, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return res.data;
+};

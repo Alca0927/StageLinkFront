@@ -4,99 +4,106 @@ import useCustomMove from "../../../hooks/useCustomMove";
 import PageComponent from "../../common/PageComponent";
 
 const initState = {
-    dtoList: [],
-    pageNumList: [],
-    pageRequestDTO: null,
-    prev: false,
-    next: false,
-    totalCount: 0,
-    prevPage: 0,
-    nextPage: 0,
-    totalPage: 0,
-    current: 0
-}
+  dtoList: [],
+  pageNumList: [],
+  pageRequestDTO: null,
+  prev: false,
+  next: false,
+  totalCount: 0,
+  prevPage: 0,
+  nextPage: 0,
+  totalPage: 0,
+  current: 0
+};
 
 const ListComponent = () => {
-    const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
-    const [serverData, setServerData] = useState(initState);
+  const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
+  const [serverData, setServerData] = useState(initState);
+  const [searchKeyword, setSearchKeyword] = useState("");
 
-    useEffect(() => {
-        getList({ page, size }).then(data => {
-            console.log("ActorShow List:", data);
-            setServerData(data);
-        });
-    }, [page, size, refresh]);
+  useEffect(() => {
+    getList({ page, size, name: searchKeyword }).then((data) => {
+      console.log("📋 배우-공연 리스트 응답:", data);
+      setServerData(data);
+    });
+  }, [page, size, refresh]);
 
-    // movePage 함수를 제대로 정의
-    const movePage = (pageParam) => {
-        moveToList(pageParam, "reservation");
-    }
-    
-    return (
-        <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">
-            
-            <div className="flex justify-center mb-6 pt-6">
-                <h2 className="text-2xl font-bold">배우 출연작 목록</h2>
-            </div>
 
-            <div className="flex flex-wrap mx-auto justify-center p-6">
-                {serverData.dtoList.map(actorShow =>
-                    <div
-                        key={`${actorShow.actorDTO.actorNo}_${actorShow.showInfoDTO.showInfo}`} 
-                        className="w-full min-w-[400px] p-2 m-2 rounded shadow-md cursor-pointer hover:shadow-lg transition-shadow"
-                        onClick={() => moveToRead(`${actorShow.actorDTO.actorNo}/${actorShow.showInfoDTO.showInfo}`, "actorshow")}
-                    >  
-                        <div className="flex items-center">
-                            {/* 배우 번호 */}
-                            <div className="font-extrabold text-lg p-2 w-1/12 text-center">
-                                {actorShow.actorDTO.actorNo}
-                            </div>
-                            
-                            {/* 배우명 */}
-                            <div className="text-lg m-1 p-2 w-2/12 font-bold">
-                                {actorShow.actorDTO.actorName}
-                            </div>
-                            
-                            {/* 공연명 */}
-                            <div className="text-lg m-1 p-2 w-3/12 font-semibold text-blue-600">
-                                {actorShow.showInfoDTO.showName}
-                            </div>
-                            
-                            {/* 배역명 */}
-                            <div className="text-md m-1 p-2 w-2/12 font-medium text-purple-600">
-                                {actorShow.roleName}
-                            </div>
-                            
-                            {/* 출연 기간 */}
-                            <div className="text-sm m-1 p-2 w-3/12 font-medium text-gray-600">
-                                {actorShow.showStartTime && actorShow.showEndTime ? 
-                                    `${actorShow.showStartTime} ~ ${actorShow.showEndTime}` :
-                                    actorShow.showStartTime || actorShow.showEndTime || '미정'
-                                }
-                            </div>
-                            
-                            {/* 공연 카테고리 */}
-                            <div className="text-sm m-1 p-2 w-1/12 font-medium text-green-600">
-                                {actorShow.showInfoDTO.showCategory}
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </div>
+  const handleSearch = () => {
+    moveToList(1, "actorshow", { name: searchKeyword });
+  };
 
-            {/* 데이터가 없을 때 */}
-            {serverData.dtoList.length === 0 && (
-                <div className="flex justify-center items-center h-32">
-                    <div className="text-xl text-gray-500">등록된 배우 출연작이 없습니다.</div>
-                </div>
-            )}
 
-            <PageComponent 
-                serverData={serverData} 
-                movePage={(pageParam) => moveToList(pageParam, "actorshow")}
-            />
+  return (
+    <div className="flex max-w-6xl mx-auto mt-8">
+      <div className="w-full">
+        {/* 검색창 */}
+        <div className="mb-4 flex items-center gap-4">
+          <input
+            type="text"
+            placeholder="배우명 또는 공연명 검색"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            className="border px-3 py-2 rounded w-64"
+          />
+          <button
+            onClick={handleSearch}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            검색
+          </button>
         </div>
-    );
-}
+
+        {/* 테이블 */}
+        <table className="w-full table-fixed border border-gray-300 text-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="w-1/12 px-4 py-2 border text-center">배우번호</th>
+              <th className="w-2/12 px-4 py-2 border text-center">배우명</th>
+              <th className="w-3/12 px-4 py-2 border text-center">공연명</th>
+              <th className="w-2/12 px-4 py-2 border text-center">배역명</th>
+              <th className="w-3/12 px-4 py-2 border text-center">기간</th>
+            </tr>
+          </thead>
+          <tbody>
+            {serverData.dtoList.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="text-center text-gray-500 py-4">
+                  🔍 검색 결과가 없습니다.
+                </td>
+              </tr>
+            ) : (
+              serverData.dtoList.map((item) => (
+                <tr
+                  key={`${item.actorDTO.actorNo}_${item.showInfoDTO.showInfo}`}
+                  className="bg-gray-100 cursor-pointer"
+                  onClick={() =>
+                    moveToRead(`${item.actorDTO.actorNo}/${item.showInfoDTO.showInfo}`, "actorshow")
+                  }
+                >
+                  <td className="px-4 py-2 border text-center">{item.actorDTO.actorNo}</td>
+                  <td className="px-4 py-2 border text-center">{item.actorDTO.actorName}</td>
+                  <td className="px-4 py-2 border text-center">{item.showInfoDTO.showName}</td>
+                  <td className="px-4 py-2 border text-center">{item.roleName}</td>
+                  <td className="px-4 py-2 border text-center">
+                    {item.showStartTime && item.showEndTime
+                      ? `${item.showStartTime} ~ ${item.showEndTime}`
+                      : item.showStartTime || item.showEndTime || "미정"}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+
+        {/* 페이지네이션 */}
+        <PageComponent
+          serverData={serverData}
+          movePage={(pageParam) => moveToList(pageParam, "actorshow")}
+        />
+      </div>
+    </div>
+  );
+};
 
 export default ListComponent;
