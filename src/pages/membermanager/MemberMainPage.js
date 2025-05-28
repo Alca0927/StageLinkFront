@@ -8,13 +8,28 @@ const MemberMainPage = () => {
   const location = useLocation();
 
   useEffect(() => {
-    fetch("/api/members/count")
-      .then((res) => res.json())
-      .then((data) => setMemberCount(data.count || 0));
+    const token = localStorage.getItem("accessToken"); // ⬅️ 로그인 시 저장된 토큰 불러오기
+    if (!token) return;
 
-    fetch("/api/reports/count")
-      .then((res) => res.json())
-      .then((data) => setReportCount(data.count || 0));
+    fetch("/api/admin/membermanager", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` // ⬅️ JWT 토큰을 Authorization 헤더에 추가
+      }
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Summary API response:", data);
+        setMemberCount(data.memberCount || 0);
+        setReportCount(data.reportCount || 0);
+      })
+      .catch((err) => {
+        console.error("Error fetching member summary:", err);
+      });
   }, []);
 
   const isRootPath = location.pathname === "/admin/membermanager";

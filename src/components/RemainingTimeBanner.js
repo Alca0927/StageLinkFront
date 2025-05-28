@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -20,15 +20,17 @@ function parseJwt(token) {
 
 const RemainingTimeBanner = () => {
   const [remainingMs, setRemainingMs] = useState(null);
-  const [alertShown, setAlertShown] = useState(false);
   const [showExtendBtn, setShowExtendBtn] = useState(false);
+  const alertShownRef = useRef(false);
   const navigate = useNavigate();
-  const loginState = useSelector(state => state.loginSlice);
+  const loginState = useSelector(state => state.login); // ✅ 수정: 정확한 reducer key 사용
+  const accessToken = localStorage.getItem('accessToken');
 
   useEffect(() => {
+    if (!accessToken) return;
+
     const updateRemainingTime = () => {
-      const token = localStorage.getItem('accessToken');
-      const payload = parseJwt(token);
+      const payload = parseJwt(accessToken);
       if (!payload || !payload.exp) {
         setRemainingMs(null);
         return;
@@ -45,9 +47,9 @@ const RemainingTimeBanner = () => {
       } else {
         setRemainingMs(diff);
 
-        if (diff <= 2 * 60 * 1000 && !alertShown) {
+        if (diff <= 2 * 60 * 1000 && !alertShownRef.current) {
           alert('2분 후 자동 로그아웃됩니다. 로그인 연장을 원하시면 버튼을 눌러주세요.');
-          setAlertShown(true);
+          alertShownRef.current = true;
           setShowExtendBtn(true);
         }
       }
@@ -56,7 +58,7 @@ const RemainingTimeBanner = () => {
     updateRemainingTime();
     const interval = setInterval(updateRemainingTime, 1000);
     return () => clearInterval(interval);
-  }, [navigate, alertShown]);
+  }, [accessToken, navigate]);
 
   const handleExtendLogin = async () => {
     try {
@@ -64,9 +66,9 @@ const RemainingTimeBanner = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          Authorization: `Bearer ${accessToken}`,
         },
-        body: new URLSearchParams({
+        body: JSON.stringify({
           refreshToken: localStorage.getItem('refreshToken'),
         }),
       });
@@ -74,17 +76,22 @@ const RemainingTimeBanner = () => {
       if (!res.ok) throw new Error('연장 실패');
 
       const data = await res.json();
+      if (!data.accessToken || !data.refreshToken) throw new Error('응답에 토큰 없음');
+
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('refreshToken', data.refreshToken);
-      setAlertShown(false);
+
+      alertShownRef.current = false;
       setShowExtendBtn(false);
+      setRemainingMs(null);
     } catch (err) {
       alert('로그인 연장 실패. 다시 로그인해 주세요.');
-      navigate('/s/login');
+      setTimeout(() => navigate('/s/login'), 1000);
     }
   };
 
-  if (!loginState.email || remainingMs === null) return null;
+  // ❗ 방어적 조건 렌더링
+  if (!loginState?.username || !accessToken || remainingMs === null) return null;
 
   const minutes = Math.floor(remainingMs / 60000);
   const seconds = Math.floor((remainingMs % 60000) / 1000);

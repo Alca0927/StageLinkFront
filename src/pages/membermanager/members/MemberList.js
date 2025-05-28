@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import jwtAxios from '../../../util/jwtUtil'; // 경로는 상황에 따라 수정
+// 🔼 axios 대신 jwtAxios를 임포트
 
 const MemberList = () => {
   const [members, setMembers] = useState([]);
@@ -11,14 +12,9 @@ const MemberList = () => {
   const navigate = useNavigate();
 
   const fetchMembers = async (pageNum = 1, name = '') => {
-    const token = localStorage.getItem("accessToken"); // JWT 토큰 로컬스토리지에서 가져오기
-
     try {
-      const response = await axios.get('/api/members', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        params: { page: pageNum, name }
+      const response = await jwtAxios.get('/api/members', {
+        params: { page: pageNum, name },
       });
 
       console.log("🔥 서버 응답:", response.data);

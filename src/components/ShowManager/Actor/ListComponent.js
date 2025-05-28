@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
-import { getList } from "../../../api/actorApi";
-import useCustomMove from "../../../hooks/useCustomMove";
-import PageComponent from "../../common/PageComponent";
+import { useEffect, useState } from 'react';
+import { getList } from '../../../api/actorApi';
+import useCustomMove from '../../../hooks/useCustomMove';
 
 const initState = {
   dtoList: [],
@@ -13,54 +12,98 @@ const initState = {
   prevPage: 0,
   nextPage: 0,
   totalPage: 0,
-  current: 0
-}
+  current: 0,
+};
 
 const ListComponent = () => {
-    const {page,size, refresh,moveToList, moveToRead} = useCustomMove()
+  const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
+  const [serverData, setServerData] = useState(initState);
+  const [searchKeyword, setSearchKeyword] = useState('');
 
-    const [serverData, setServerData] = useState(initState)
+  useEffect(() => {
+    getList({ page, size, name: searchKeyword }).then((data) => {
+      console.log('🔥 서버 응답:', data);
+      setServerData(data);
+    });
+  }, [page, size, refresh, searchKeyword]);
 
-    useEffect(() => {
-      getList({page,size}).then(data => {
-        console.log(data)
-        setServerData(data)
-      })
-    }, [page,size,refresh])
+  const handleSearch = () => {
+    moveToList(1, 'actor', { name: searchKeyword });
+  };
 
-    return (
-      <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">
-  
-      <div className="flex flex-wrap mx-auto justify-center p-6">
-  
-        {serverData.dtoList.map(actor =>
-  
-        <div
-        key= {actor.actorNo} 
-        className="w-full min-w-[400px]  p-2 m-2 rounded shadow-md"
-        onClick={() => moveToRead(actor.actorNo, "actor")} //이벤트 처리 추가 
-        >  
-  
-          <div className="flex ">
-            <div className="font-extrabold text-2xl p-2 w-1/12">
-              {actor.actorNo}
-            </div>
-            <div className="text-1xl m-1 p-2 w-8/12 font-extrabold">
-              {actor.actorImage}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {actor.actorName}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {actor.actorProfile}
-            </div>
-          </div>
-        </div>
-        )}
+  return (
+    <div className="max-w-6xl mx-auto mt-10 px-4">
+      {/* 검색창 */}
+      <div className="mb-4 flex items-center gap-4">
+        <input
+          type="text"
+          placeholder="이름으로 검색"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          className="border px-3 py-2 rounded w-64"
+        />
+        <button
+          onClick={handleSearch}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          검색
+        </button>
       </div>
-        <PageComponent serverData={serverData} movePage={() => moveToList(null, "actor")}></PageComponent>
+
+      {/* 테이블 */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full table-auto border border-gray-300 text-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-4 py-3 border text-center">배우 번호</th>
+              <th className="px-4 py-3 border text-center">이름</th>
+              <th className="px-4 py-3 border text-center">프로필</th>
+            </tr>
+          </thead>
+          <tbody>
+            {!serverData.dtoList || serverData.dtoList.length === 0 ? (
+              <tr>
+                <td colSpan="4" className="text-center text-gray-500 py-6">
+                  🔍 검색 결과가 없습니다.
+                </td>
+              </tr>
+            ) : (
+              serverData.dtoList.map((actor) => (
+                <tr
+                  key={actor.actorNo}
+                  onClick={() => moveToRead(actor.actorNo, 'actor')}
+                  className="cursor-pointer hover:bg-blue-50 transition-colors"
+                >
+                  <td className="px-4 py-3 border text-center">{actor.actorNo}</td>
+                  <td className="px-4 py-3 border text-center">{actor.actorName}</td>
+                  <td className="px-4 py-3 border text-center">{actor.actorProfile}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* 페이지네이션 */}
+      <div className="flex justify-center mt-6 space-x-2">
+        {Array.isArray(serverData.pageNumList) &&
+          serverData.pageNumList.map((pageNum) => (
+            <button
+              key={pageNum}
+              onClick={() => moveToList(pageNum, 'actor')}
+              className={`px-4 py-2 rounded text-sm font-medium ${
+                serverData.current === pageNum
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 hover:bg-gray-300'
+              }`}
+            >
+              {pageNum}
+            </button>
+          ))}
+      </div>
     </div>
-    );
-}
+  );
+};
 
 export default ListComponent;

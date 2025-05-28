@@ -4,18 +4,18 @@ import { getCookie, setCookie, removeCookie } from "../util/cookieUtil";
 
 // 초기 상태
 const initState = {
-  email: '',
+  username: '',
   roles: []
 };
 
-// ✅ 로컬 스토리지와 쿠키에서 상태 복원
+// 로컬 저장소에서 사용자 정보 불러오기
 const loadMemberFromStorage = () => {
   const token = localStorage.getItem("accessToken");
   const login = getCookie("login");
 
-  if (token && login && login.email) {
+  if (token && login && login.username) {
     return {
-      email: decodeURIComponent(login.email),
+      username: decodeURIComponent(login.username),
       roles: login.roles || []
     };
   }
@@ -23,18 +23,23 @@ const loadMemberFromStorage = () => {
   return initState;
 };
 
-// 로그인 비동기 처리
-export const loginPostAsync = createAsyncThunk('loginPostAsync', (param) => {
-  return loginPost(param);
-});
+// 비동기 로그인 액션
+export const loginPostAsync = createAsyncThunk(
+  'loginPostAsync',
+  (param) => loginPost(param)
+);
 
+// 로그인 슬라이스
 const loginSlice = createSlice({
   name: 'LoginSlice',
   initialState: loadMemberFromStorage(),
   reducers: {
     login: (state, action) => {
       const data = action.payload;
-      return { email: data.email, roles: data.roles || [] };
+      return {
+        username: data.username,
+        roles: data.roles || []
+      };
     },
     logout: () => {
       removeCookie("login");
@@ -47,18 +52,33 @@ const loginSlice = createSlice({
     builder
       .addCase(loginPostAsync.fulfilled, (state, action) => {
         const payload = action.payload;
+
         if (!payload.error) {
-          setCookie("login", JSON.stringify(payload), 1);
+          const accessToken = payload.accessToken;
+          const refreshToken = payload.refreshToken;
 
-          localStorage.setItem("accessToken", payload.accessToken);
-          localStorage.setItem("refreshToken", payload.refreshToken);
+          
+          // ✅ 토큰 유효성 검사 후 저장
+          if (accessToken && refreshToken) {
+            setCookie("login", JSON.stringify({
+              username: payload.username,  // ✅ username 사용
+              roles: payload.roles
+            }), 1);
 
-          return {
-            email: payload.username,
-            roles: payload.roles || []
-          };
+            localStorage.setItem("accessToken", accessToken);
+            localStorage.setItem("refreshToken", refreshToken);
+
+            return {
+              username: payload.username,  // ✅ username 사용
+              roles: payload.roles || []
+            };
+          } else {
+            console.error("❗ 로그인 응답에 유효한 토큰이 없습니다.");
+            alert("로그인 실패: 서버에서 토큰을 받지 못했습니다.");
+          }
         }
-        return state;
+
+        return state; // 에러 또는 조건 불충족 시 기존 상태 유지
       })
       .addCase(loginPostAsync.pending, () => {
         console.log("로그인 처리중...");

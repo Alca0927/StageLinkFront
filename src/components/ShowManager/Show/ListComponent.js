@@ -14,53 +14,97 @@ const initState = {
   nextPage: 0,
   totalPage: 0,
   current: 0
-}
+};
 
 const ListComponent = () => {
-    const {page,size, refresh,moveToList, moveToRead} = useCustomMove()
+  const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
+  const [serverData, setServerData] = useState(initState);
+  const [searchKeyword, setSearchKeyword] = useState("");
 
-    const [serverData, setServerData] = useState(initState)
+  useEffect(() => {
+    getList({ page, size, name: searchKeyword }).then((data) => {
+      console.log("🔥 서버 응답:", data);
+      setServerData(data);
+    });
+  }, [page, size, refresh, searchKeyword]);
 
-    useEffect(() => {
-      getList({page,size}).then(data => {
-        console.log(data)
-        setServerData(data)
-      })
-    }, [page,size,refresh])
+  const handleSearch = () => {
+    moveToList(1, "show", { name: searchKeyword });
+  };
 
-    return (
-      <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">
-  
-      <div className="flex flex-wrap mx-auto justify-center p-6">
-  
-        {serverData.dtoList.map(show =>
-  
-        <div
-        key= {show.showNo} 
-        className="w-full min-w-[400px]  p-2 m-2 rounded shadow-md"
-        onClick={() => moveToRead(show.showNo, "show")} //이벤트 처리 추가 
-        >  
-  
-          <div className="flex ">
-            <div className="font-extrabold text-2xl p-2 w-1/12">
-              {show.showNo}
-            </div>
-            <div className="text-1xl m-1 p-2 w-8/12 font-extrabold">
-              {show.showName}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {show.showLocation}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {show.showState}
-            </div>
-          </div>
-        </div>
-        )}
+  return (
+    <div className="max-w-6xl mx-auto mt-10 px-4">
+
+      {/* 검색창 */}
+      <div className="mb-4 flex items-center gap-4">
+        <input
+          type="text"
+          placeholder="공연명으로 검색"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          className="border px-3 py-2 rounded w-64"
+        />
+        <button
+          onClick={handleSearch}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          검색
+        </button>
       </div>
-        <PageComponent serverData={serverData} movePage={() => moveToList(null, "show")}></PageComponent>
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full table-auto border border-gray-300 text-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-4 py-3 border text-center">공연 번호</th>
+              <th className="px-4 py-3 border text-center">공연명</th>
+              <th className="px-4 py-3 border text-center">공연 장소</th>
+              <th className="px-4 py-3 border text-center">상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            {serverData.dtoList.length === 0 ? (
+              <tr>
+                <td colSpan="4" className="text-center text-gray-500 py-6">
+                  🔍 데이터가 없습니다.
+                </td>
+              </tr>
+            ) : (
+              serverData.dtoList.map((show) => (
+                <tr
+                  key={show.showNo}
+                  onClick={() => moveToRead(show.showNo, "show")}
+                  className="cursor-pointer hover:bg-blue-50 transition-colors"
+                >
+                  <td className="px-4 py-3 border text-center">{show.showNo}</td>
+                  <td className="px-4 py-3 border text-center">{show.showName}</td>
+                  <td className="px-4 py-3 border text-center">{show.showLocation}</td>
+                  <td className="px-4 py-3 border text-center">{show.showState}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex justify-center mt-6 space-x-2">
+        {serverData.pageNumList.map((pageNum) => (
+          <button
+            key={pageNum}
+            onClick={() => moveToList(pageNum, "show")}
+            className={`px-4 py-2 rounded text-sm font-medium ${
+              serverData.current === pageNum
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+          >
+            {pageNum}
+          </button>
+        ))}
+      </div>
     </div>
-    );
-}
+  );
+};
 
 export default ListComponent;
