@@ -17,3 +17,8 @@ export const getList = async (pageParam) => {
 
     return res.data
 }
+
+export const postAdd = async (noticeObj) => {
+    const res = await axios.post(`${prefix}/add`, noticeObj)
+    return res.data
+}
