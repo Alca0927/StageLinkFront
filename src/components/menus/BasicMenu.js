@@ -38,7 +38,7 @@ console.log("🧠 username:", loginState?.username);
                 <Link to="/admin/registermanager">예매 관리</Link>
               </li>
               <li className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                <Link to="/admin/statistic">통계</Link>
+                <Link to="/admin/statisticsmanager">통계</Link>
               </li>
               <li className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
                 <Link to="/s/logout">로그아웃</Link>

@@ -88,6 +88,7 @@ const ListComponent = () => {
         </table>
       </div>
 
+
       <div className="flex justify-center mt-6 space-x-2">
         {serverData.pageNumList.map((pageNum) => (
           <button
@@ -103,6 +104,9 @@ const ListComponent = () => {
           </button>
         ))}
       </div>
+
+        //<PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "location")}></PageComponent>
+
     </div>
   );
 };

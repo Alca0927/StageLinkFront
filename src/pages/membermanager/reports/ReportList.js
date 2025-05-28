@@ -62,9 +62,9 @@ const ReportList = () => {
       <table className="w-full table-fixed border border-gray-300">
         <thead className="bg-gray-100">
           <tr>
-            <th className="w-1/12 px-4 py-2 border">신고 번호</th>
+            <th className="w-2/12 px-4 py-2 border">신고 번호</th>
             <th className="w-2/12 px-4 py-2 border">신고자 ID</th>
-            <th className="w-1/12 px-4 py-2 border">게시글 번호</th>
+            <th className="w-2/12 px-4 py-2 border">게시글 번호</th>
             <th className="w-8/12 px-4 py-2 border">신고 사유</th>
           </tr>
         </thead>

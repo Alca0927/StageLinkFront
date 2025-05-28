@@ -28,9 +28,11 @@ const ListComponent = () => {
     });
   }, [page, size, refresh]);
 
+
   const handleSearch = () => {
     moveToList(1, "actorshow", { name: searchKeyword });
   };
+
 
   return (
     <div className="flex max-w-6xl mx-auto mt-8">

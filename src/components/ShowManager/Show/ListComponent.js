@@ -9,7 +9,7 @@ const initState = {
   pageRequestDTO: null,
   prev: false,
   next: false,
-  totoalCount: 0,
+  totalCount: 0,
   prevPage: 0,
   nextPage: 0,
   totalPage: 0,
@@ -31,6 +31,7 @@ const ListComponent = () => {
   const handleSearch = () => {
     moveToList(1, "show", { name: searchKeyword });
   };
+
 
   return (
     <div className="max-w-6xl mx-auto mt-10 px-4">
@@ -103,6 +104,9 @@ const ListComponent = () => {
           </button>
         ))}
       </div>
+
+        //<PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "show")}></PageComponent>
+
     </div>
   );
 };

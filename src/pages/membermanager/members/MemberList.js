@@ -67,10 +67,12 @@ const MemberList = () => {
         <table className="w-full table-fixed border border-gray-300 text-sm">
           <thead className="bg-gray-100">
             <tr>
-              <th className="w-1/12 px-4 py-2 border text-center">회원번호</th>
+              <th className="w-2/12 px-4 py-2 border text-center">회원번호</th>
               <th className="w-2/12 px-4 py-2 border text-center">아이디</th>
               <th className="w-2/12 px-4 py-2 border text-center">이름</th>
+              <th className="w-2/12 px-4 py-2 border text-center">가입일자</th>
               <th className="w-4/12 px-4 py-2 border text-center">이메일</th>
+              <th className="w-4/12 px-4 py-2 border text-center">TYPE</th>
               <th className="w-3/12 px-4 py-2 border text-center">상태</th>
             </tr>
           </thead>
@@ -99,7 +101,9 @@ const MemberList = () => {
                   <td className="px-4 py-2 border text-center">{member.memberNo}</td>
                   <td className="px-4 py-2 border text-center">{member.userId}</td>
                   <td className="px-4 py-2 border text-center">{member.name}</td>
+                  <td className="px-4 py-2 border text-center">{member.joinedDate}</td>
                   <td className="px-4 py-2 border text-center">{member.userEmail}</td>
+                  <td className="px-4 py-2 border text-center">{member.signupType}</td>
                   <td className="px-4 py-2 border text-center">{member.memberState}</td>
                 </tr>
               ))

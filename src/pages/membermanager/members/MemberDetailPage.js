@@ -53,6 +53,8 @@ const MemberDetailPage = () => {
           <div><strong>이름:</strong> {member.name}</div>
           <div><strong>닉네임:</strong> {member.nickname}</div>
           <div><strong>이메일:</strong> {member.userEmail}</div>
+          <div><strong>가입일자:</strong> {member.joinedDate}</div>
+          <div><strong>회원가입유형:</strong> {member.signupType}</div>
           <div>
             <strong>회원 상태:</strong>
             <select
