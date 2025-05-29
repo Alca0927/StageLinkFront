@@ -47,14 +47,20 @@ const ListComponent = () => {
             <div className="font-extrabold text-2xl p-2 w-1/12">
               {refund.refundNo}
             </div>
-            <div className="text-1xl m-1 p-2 w-8/12 font-extrabold">
-              {refund.member}
+            <div className="text-1xl m-1 p-2 w-2/10 font-extrabold">
+              {refund.member.memberNo}
             </div>
             <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {refund.reservation}
+              {refund.reservation.reservationNo}
             </div>
             <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {refund.seat}
+              {refund.seat.seatId}
+            </div>
+            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
+              {refund.seat.seatClass}
+            </div>
+            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
+              {refund.seat.seatNumber}
             </div>
             <div className="text-1xl m-1 p-2 w-2/10 font-medium">
               {refund.refundDate}

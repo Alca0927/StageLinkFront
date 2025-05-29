@@ -31,9 +31,11 @@ const ReadComponent = ({refundNo}) => {
     return (
         <div className="border-2 border-sky-200 mt-10 m-2 p-4">
             {makeDiv('환불 번호', refund.refundNo)}
-            {makeDiv('고객 번호', refund.member)}
-            {makeDiv('예매 번호', refund.reservation)}
-            {makeDiv('좌석 번호', refund.seat)}
+            {makeDiv('고객 번호', refund.member.memberNo)}
+            {makeDiv('예매 번호', refund.reservation.reservationNo)}
+            {makeDiv('좌석 ID', refund.seat.seatId)}
+            {makeDiv('좌석 클래스', refund.seat.seatClass)}
+            {makeDiv('좌석 번호', refund.seat.seatNumber)}
             {makeDiv('환불 일자', refund.refundDate)}
 
             {/* 버튼 */}

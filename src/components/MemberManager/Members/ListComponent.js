@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getList } from "../../../api/memberApi";
 import useCustomMove from "../../../hooks/useCustomMove";
 import PageComponent from "../../common/PageComponent";
@@ -21,8 +20,7 @@ const ListComponent = () => {
   const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
   const [searchName, setSearchName] = useState('');
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [error, setError] = useState(null);;
 
   const fetchMembers = async (pageNum = page, name = '') => {
     try {
@@ -43,7 +41,7 @@ const ListComponent = () => {
   }, [page, size, refresh]);
 
   const handleSearch = () => {
-    moveToList(1, "member", { name: searchName });
+    moveToList(1, "members", { name: searchName });
   };
 
   return (
@@ -117,7 +115,7 @@ const ListComponent = () => {
 
         <PageComponent 
           serverData={serverData} 
-          movePage={(pageParam) => moveToList(pageParam, "member")}
+          movePage={(pageParam) => moveToList(pageParam, "members")}
         />
       </div>
     </div>
