@@ -13,39 +13,32 @@ const initState = {
 const ReadComponent = ({refundNo}) => {
     const [refund, setRefund] = useState(initState)
     const {moveToList} = useCustomMove()
-/*
+
     useEffect(() => {
-        getOne(showlocation).then(data => {
-            console.log(data)
-            setLocation(data)
-        })
-    }, [showlocation])
-*/
-    useEffect(() => {
-  console.log("Received showlocation:", refundNo);
-  if (refundNo) {
-    getOne(refundNo).then(data => {
-      console.log(data);
-      setRefund(data);
-    }).catch(error => {
-      console.error("Error fetching refund:", error);
-    });
-  } else {
-    console.error("refundNo is invalid:", refundNo);
-  }
-}, [refundNo]);
+        console.log("Received showlocation:", refundNo);
+        if (refundNo) {
+            getOne(refundNo).then(data => {
+                console.log(data);
+                setRefund(data);
+            }).catch(error => {
+            console.error("Error fetching refund:", error);
+            });
+        } else {
+            console.error("refundNo is invalid:", refundNo);
+        }
+    }, [refundNo]);
 
     return (
         <div className="border-2 border-sky-200 mt-10 m-2 p-4">
-            {makeDiv('refundNo', refund.refundNo)}
-            {makeDiv('member', refund.member)}
-            {makeDiv('reservation', refund.reservation)}
-            {makeDiv('seat', refund.seat)}
-            {makeDiv('refundDate', refund.refundDate)}
+            {makeDiv('환불 번호', refund.refundNo)}
+            {makeDiv('고객 번호', refund.member)}
+            {makeDiv('예매 번호', refund.reservation)}
+            {makeDiv('좌석 번호', refund.seat)}
+            {makeDiv('환불 일자', refund.refundDate)}
 
             {/* 버튼 */}
             <div className="flex justify-end p-4">
-                <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500" onClick={() => moveToList(null, "refund")}>목록</button>
+                <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500" onClick={(pageParam) => moveToList(pageParam, "refund")}>목록</button>
             </div>
         </div>
     );

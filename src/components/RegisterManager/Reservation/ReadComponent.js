@@ -31,7 +31,7 @@ const ReadComponent = ({reservationNo}) => {
 
     return (
         <div className="border-2 border-sky-200 mt-10 m-2 p-4">
-            {makeDiv('reservationNo', reservation.reservationNo)}
+            {makeDiv('예매 번호', reservation.reservationNo)}
             {/* member 정보를 보기 좋게 표시 */}
             {reservation.member && typeof reservation.member === 'object' ? (
                 <div>
@@ -59,7 +59,7 @@ const ReadComponent = ({reservationNo}) => {
             
             {/* 버튼 */}
             <div className="flex justify-end p-4">
-                <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500" onClick={() => moveToList(null, "reservation")}>목록</button>
+                <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500" onClick={(pageParam) => moveToList(pageParam, "reservation")}>목록</button>
             </div>
         </div>
     );

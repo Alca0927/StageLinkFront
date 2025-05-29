@@ -17,7 +17,7 @@ const initState = {
 };
 
 const ListComponent = () => {
-  const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
+  const { page, size, refresh, moveToList, moveToRead, moveToAdd } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
   const [searchKeyword, setSearchKeyword] = useState("");
 
@@ -32,6 +32,9 @@ const ListComponent = () => {
     moveToList(1, "show", { name: searchKeyword });
   };
 
+  const handleAdd = () => {
+    moveToAdd("show");
+  }
 
   return (
     <div className="max-w-6xl mx-auto mt-10 px-4">
@@ -52,6 +55,10 @@ const ListComponent = () => {
         >
           검색
         </button>
+      </div>
+
+      <div>
+        <button onClick={handleAdd}>공연 추가</button>
       </div>
 
       <div className="overflow-x-auto">
@@ -79,8 +86,8 @@ const ListComponent = () => {
                   className="cursor-pointer hover:bg-blue-50 transition-colors"
                 >
                   <td className="px-4 py-3 border text-center">{show.showNo}</td>
-                  <td className="px-4 py-3 border text-center">{show.showName}</td>
-                  <td className="px-4 py-3 border text-center">{show.showLocation}</td>
+                  <td className="px-4 py-3 border text-center">{show.showInfoDTO.showName}</td>
+                  <td className="px-4 py-3 border text-center">{show.showInfoDTO.showLocationDTO.locationName}</td>
                   <td className="px-4 py-3 border text-center">{show.showState}</td>
                 </tr>
               ))
@@ -88,24 +95,7 @@ const ListComponent = () => {
           </tbody>
         </table>
       </div>
-
-      <div className="flex justify-center mt-6 space-x-2">
-        {serverData.pageNumList.map((pageNum) => (
-          <button
-            key={pageNum}
-            onClick={() => moveToList(pageNum, "show")}
-            className={`px-4 py-2 rounded text-sm font-medium ${
-              serverData.current === pageNum
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-          >
-            {pageNum}
-          </button>
-        ))}
-      </div>
-
-        //<PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "show")}></PageComponent>
+      <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "show")}></PageComponent>
 
     </div>
   );

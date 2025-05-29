@@ -47,15 +47,7 @@ const useCustomMove = () => {
       search: queryDefault  //수정시에 기존의 쿼리 스트링 유지를 위해 
     })
   }
-  /*
-  const moveToRead =(num,path) => {
-    console.log(queryDefault)
-    navigate({
-      pathname: `../${path}/read/${num}`,
-      search: queryDefault
-    })
-  }
-*/
+
   const moveToRead = (num, path) => {
   if (num) {
     console.log("Navigating with:", num);  // num 값 확인
@@ -67,7 +59,6 @@ const useCustomMove = () => {
     console.error("Invalid showlocation num:", num);
   }
 };
-
 
   const moveToAdd = (path) => {
     navigate({

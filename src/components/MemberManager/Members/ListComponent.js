@@ -71,7 +71,7 @@ const ListComponent = () => {
         </div>
         )}
       </div>
-        <PageComponent serverData={serverData} movePage={() => moveToList(null, "member")}></PageComponent>
+        <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "member")}></PageComponent>
     </div>
     );
 }

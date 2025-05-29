@@ -7,7 +7,7 @@ const StatisticSideMenu = () => {
   const month = now.getMonth(); // 0부터 시작 → 1 더해야 함
   const showNo = null;
   
-  const linkClass = (path: string) =>
+  const linkClass = (path) =>
     `font-bold px-2 py-1 rounded transition ${
       location.pathname.includes(path)
         ? "bg-blue-700 text-white"
@@ -16,9 +16,9 @@ const StatisticSideMenu = () => {
 
   return (
     <div className="flex flex-col space-y-2">
-      <Link to={`/admin/statisticsmanager/members/${year}/${month}`}>회원 통계</Link>
-      <Link to={`/admin/statisticsmanager/sales/${year}/${month}`}>매출 통계</Link>
-      <Link to={`/admin/statisticsmanager/register/${showNo}`}>예매 통계</Link>
+      <Link to={`/admin/statisticsmanager/members/${year}/${month}`} className={linkClass("members")}>회원 통계</Link>
+      <Link to={`/admin/statisticsmanager/sales/${year}/${month}`} className={linkClass("sales")}>매출 통계</Link>
+      <Link to={`/admin/statisticsmanager/register/${showNo}`} className={linkClass("register")}>예매 통계</Link>
     </div>
   );
 };

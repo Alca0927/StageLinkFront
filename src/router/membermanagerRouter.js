@@ -15,12 +15,12 @@ const membermanagerRoutor = () => {
             element : <Suspense fallback={Loading}><MemberList/></Suspense>
         },
         {
-            path: "reports/list",
-            element : <Suspense fallback={Loading}><ReportList/></Suspense>
-        },
-        {
             path: "members/:member_no",
             element : <Suspense fallback={Loading}><MemberDetail/></Suspense>
+        },
+        {
+            path: "reports/list",
+            element : <Suspense fallback={Loading}><ReportList/></Suspense>
         },
         {
             path: "reports/:reportNo",

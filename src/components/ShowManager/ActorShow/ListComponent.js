@@ -17,7 +17,7 @@ const initState = {
 };
 
 const ListComponent = () => {
-  const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
+  const { page, size, refresh, moveToList, moveToRead, moveToAdd } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
   const [searchKeyword, setSearchKeyword] = useState("");
 
@@ -33,6 +33,9 @@ const ListComponent = () => {
     moveToList(1, "actorshow", { name: searchKeyword });
   };
 
+  const handleAdd = () => {
+    moveToAdd("actorshow")
+  }
 
   return (
     <div className="flex max-w-6xl mx-auto mt-8">
@@ -53,6 +56,8 @@ const ListComponent = () => {
             검색
           </button>
         </div>
+
+        <button onClick={handleAdd}>배우 출연작 추가</button>
 
         {/* 테이블 */}
         <table className="w-full table-fixed border border-gray-300 text-sm">

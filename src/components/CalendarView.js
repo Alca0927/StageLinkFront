@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-
-// ❌ 모든 CSS import 제거 (v6 이상 자동 적용됨)
 
 const CalendarView = () => {
   const [events, setEvents] = useState([]);

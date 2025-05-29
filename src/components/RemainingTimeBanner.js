@@ -1,57 +1,35 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
-function parseJwt(token) {
-  try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
-    );
-    return JSON.parse(jsonPayload);
-  } catch (e) {
-    return null;
-  }
-}
+import { getRemainingTime, clearTokens } from '../util/tokenUtils';
 
 const RemainingTimeBanner = () => {
   const [remainingMs, setRemainingMs] = useState(null);
   const [showExtendBtn, setShowExtendBtn] = useState(false);
   const alertShownRef = useRef(false);
   const navigate = useNavigate();
-  const loginState = useSelector(state => state.login); // ✅ 수정: 정확한 reducer key 사용
+  const loginState = useSelector(state => state.login);
   const accessToken = localStorage.getItem('accessToken');
 
   useEffect(() => {
     if (!accessToken) return;
 
     const updateRemainingTime = () => {
-      const payload = parseJwt(accessToken);
-      if (!payload || !payload.exp) {
-        setRemainingMs(null);
+      const remaining = getRemainingTime(accessToken);
+      
+      if (remaining === null || remaining <= 0) {
+        clearTokens();
+        navigate('/s/login');
         return;
       }
 
-      const expTime = payload.exp * 1000;
-      const now = Date.now();
-      const diff = expTime - now;
+      setRemainingMs(remaining);
 
-      if (diff <= 0) {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        navigate('/s/login');
-      } else {
-        setRemainingMs(diff);
-
-        if (diff <= 2 * 60 * 1000 && !alertShownRef.current) {
-          alert('2분 후 자동 로그아웃됩니다. 로그인 연장을 원하시면 버튼을 눌러주세요.');
-          alertShownRef.current = true;
-          setShowExtendBtn(true);
-        }
+      // 2분 전 알림
+      if (remaining <= 2 * 60 * 1000 && !alertShownRef.current) {
+        alert('2분 후 자동 로그아웃됩니다. 로그인 연장을 원하시면 버튼을 눌러주세요.');
+        alertShownRef.current = true;
+        setShowExtendBtn(true);
       }
     };
 
@@ -83,14 +61,13 @@ const RemainingTimeBanner = () => {
 
       alertShownRef.current = false;
       setShowExtendBtn(false);
-      setRemainingMs(null);
+      setRemainingMs(null); // 새로운 토큰으로 다시 계산되도록
     } catch (err) {
       alert('로그인 연장 실패. 다시 로그인해 주세요.');
       setTimeout(() => navigate('/s/login'), 1000);
     }
   };
 
-  // ❗ 방어적 조건 렌더링
   if (!loginState?.username || !accessToken || remainingMs === null) return null;
 
   const minutes = Math.floor(remainingMs / 60000);

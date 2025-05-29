@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 const ShowMainPage = () => {
     return (
         <BasicLayout>
-            <div>Show Main Page</div>
+            <div>공연 관리 페이지</div>
             <Outlet/>
         </BasicLayout>
     );

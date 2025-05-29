@@ -6,7 +6,7 @@ const ActorReadPage = () => {
 
     return (
         <div className="p-4 w-full bg-white">
-            <div>Actor Read Page</div>
+            <div>배우 상세 페이지</div>
             <ReadComponent actorNo = {actorNo}></ReadComponent>
         </div>
     );

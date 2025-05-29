@@ -23,9 +23,9 @@ const initState = {
 const ReadComponent = ({ actorNo, showInfoId }) => {
     const [actorShow, setActorShow] = useState(initState);
     const { moveToList, moveToModify } = useCustomMove();
-
+    console.log("actorNo: ", actorNo, "showInfoId: ", showInfoId)
     useEffect(() => {
-        if (actorNo && showInfoId) {
+        if (actorNo !== undefined && showInfoId !== undefined) {
             getOne(actorNo, showInfoId)
                 .then(data => {
                     console.log("배우 출연작 상세 정보:", data);
@@ -51,25 +51,6 @@ const ReadComponent = ({ actorNo, showInfoId }) => {
                 {makeDiv('배우 번호', actorShow.actorDTO.actorNo)}
                 {makeDiv('배우명', actorShow.actorDTO.actorName)}
                 {makeDiv('배우 프로필', actorShow.actorDTO.actorProfile)}
-                
-                {/* 배우 이미지 */}
-                {actorShow.actorDTO.actorImage && (
-                    <div className="flex justify-center">
-                        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-                            <div className="w-1/5 p-6 text-right font-bold">배우 이미지</div>
-                            <div className="w-4/5 p-6 rounded-r border border-solid shadow-md">
-                                <img 
-                                    src={actorShow.actorDTO.actorImage} 
-                                    alt="배우 이미지"
-                                    className="max-w-xs max-h-48 object-cover border rounded"
-                                    onError={(e) => {
-                                        e.target.style.display = 'none';
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                )}
             </div>
 
             {/* 공연 정보 섹션 */}
