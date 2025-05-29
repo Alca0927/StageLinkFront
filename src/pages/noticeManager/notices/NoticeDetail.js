@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import ReadComponent from "../../../components/NoticeManager/Notices/ReadComponent";
 
-const ReportReadPage = () => {
+const NoticeDetail = () => {
     const {noticeNo} = useParams()
 
     return (
@@ -12,4 +12,4 @@ const ReportReadPage = () => {
     );
 }
 
-export default ReportReadPage;
+export default NoticeDetail;

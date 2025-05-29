@@ -18,6 +18,6 @@ export const getList = async (pageParam) => {
 }
 
 export const postAdd = async (noticeObj) => {
-    const res = await axios.post(`${prefix}/add`, noticeObj)
+    const res = await jwtAxios.post(`${prefix}/add`, noticeObj)
     return res.data
 }

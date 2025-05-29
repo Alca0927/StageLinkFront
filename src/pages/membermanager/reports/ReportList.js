@@ -1,4 +1,4 @@
-import ListComponent from "../../../components/MemberManager/Members/ListComponent";
+import ListComponent from "../../../components/MemberManager/Reports/ListComponent";
 
 const ReportListPage = () => {
     return (
