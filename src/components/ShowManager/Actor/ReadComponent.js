@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getOne, putOne } from "../../../api/actorApi";
 import useCustomMove from "../../../hooks/useCustomMove";
+import uploadToCloudinary from "../../../util/uploadToCloudinary"; // ✅ Cloudinary 업로드 함수
 
 const initState = {
   actorNo: 0,
@@ -12,6 +13,7 @@ const initState = {
 const ReadComponent = ({ actorNo }) => {
   const [actor, setActor] = useState(initState);
   const [imageFile, setImageFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
   const { moveToList } = useCustomMove();
 
   useEffect(() => {
@@ -32,7 +34,7 @@ const ReadComponent = ({ actorNo }) => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setActor(prev => ({ ...prev, actorImage: reader.result }));
+        setPreviewImage(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -40,20 +42,32 @@ const ReadComponent = ({ actorNo }) => {
 
   const handleModify = async () => {
     try {
-      const formData = new FormData();
-      formData.append("actorNo", actor.actorNo);
-      formData.append("actorName", actor.actorName);
-      formData.append("actorProfile", actor.actorProfile);
+      let imageUrl = actor.actorImage;
+
       if (imageFile) {
-        formData.append("actorImage", imageFile);
+        try {
+          console.log("📤 Cloudinary에 이미지 업로드 시도 중...");
+          imageUrl = await uploadToCloudinary(imageFile);
+          console.log("✅ Cloudinary 업로드 성공:", imageUrl);
+        } catch (uploadErr) {
+          console.error("❌ Cloudinary 업로드 실패:", uploadErr);
+          alert("Cloudinary 업로드 실패: " + uploadErr.message);
+          return;
+        }
       }
 
-      await putOne(formData);
+      const updatedActor = {
+        ...actor,
+        actorImage: imageUrl,
+      };
+
+      console.log("📦 서버에 수정 요청 보냄:", updatedActor);
+      await putOne(updatedActor);
       alert("수정이 완료되었습니다.");
       moveToList(null, "actor");
     } catch (e) {
-      console.error(e);
-      alert("수정 실패");
+      console.error("❌ 수정 실패:", e);
+      alert("수정 실패: " + e.message);
     }
   };
 
@@ -65,10 +79,10 @@ const ReadComponent = ({ actorNo }) => {
         <div className="flex gap-10">
           {/* 이미지 영역 */}
           <div className="w-72 aspect-[3/4] overflow-hidden rounded-lg shadow relative">
-            {actor.actorImage ? (
-              <img 
-                src={actor.actorImage} 
-                alt={actor.actorName} 
+            {(previewImage || actor.actorImage) ? (
+              <img
+                src={previewImage || actor.actorImage}
+                alt={actor.actorName}
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -93,13 +107,13 @@ const ReadComponent = ({ actorNo }) => {
             </div>
 
             <div className="flex justify-end space-x-4 pt-4">
-              <button 
+              <button
                 className="px-5 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
                 onClick={() => moveToList(null, "actor")}
               >
                 목록
               </button>
-              <button 
+              <button
                 className="px-5 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                 onClick={handleModify}
               >
@@ -113,6 +127,7 @@ const ReadComponent = ({ actorNo }) => {
   );
 };
 
+// 🔁 입력창 재사용 함수
 const makeEditable = (label, content, readOnly, name, onChange, isTextarea) => (
   <div className="flex flex-col text-sm mb-1">
     <label className="font-medium text-gray-600 mb-1">{label}:</label>

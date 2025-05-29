@@ -30,7 +30,7 @@ const noticemanagerRoutor = () => {
         },
         
         {
-            path: "qna/entry/:questionNo",
+            path: "qna/:questionNo",
             element : <Suspense fallback={Loading}><QnaEntry/></Suspense>
         }
         

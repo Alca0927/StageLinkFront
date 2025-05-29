@@ -1,102 +1,3 @@
-/*
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import PageComponent from "../../common/PageComponent";
-
-const QnaList = () => {
-  const [qnas, setQnas] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const pageSize = 10;
-
-  const navigate = useNavigate();
-
-  const fetchQnas = async (pageNum = 1) => {
-    setLoading(true);
-    const token = localStorage.getItem("accessToken"); // ✅ JWT 토큰 가져오기
-
-    try {
-      const res = await fetch(`/api/qna/list?page=${pageNum}&size=${pageSize}`, {
-        headers: {
-          Authorization: `Bearer ${token}` // ✅ 인증 헤더 추가
-        }
-      });
-      if (!res.ok) throw new Error('서버 오류');
-      const data = await res.json();
-      setQnas(Array.isArray(data.dtoList) ? data.dtoList : []);
-      setTotalPages(typeof data.totalPage === 'number' ? data.totalPage : 1);
-    } catch (err) {
-      console.error('Q&A 불러오기 실패:', err);
-      setError('Q&A 데이터를 불러오는 중 오류가 발생했습니다.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchQnas(page);
-  }, [page]);
-
-  return (
-    <div className="max-w-7xl mx-auto mt-8">
-      <h2 className="text-2xl font-bold mb-4">Q&A 목록</h2>
-
-      <table className="w-full table-fixed border border-gray-300">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="w-1/12 px-2 py-2 border">Q&A 번호</th>
-            <th className="w-1/12 px-2 py-2 border">회원 번호</th>
-            <th className="w-3/12 px-2 py-2 border">질문</th>
-            <th className="w-3/12 px-2 py-2 border">답변</th>
-            <th className="w-2/12 px-2 py-2 border">작성일</th>
-            <th className="w-2/12 px-2 py-2 border">평점</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white">
-          {loading ? (
-            <tr>
-              <td colSpan="6" className="text-center p-4">로딩 중...</td>
-            </tr>
-          ) : error ? (
-            <tr>
-              <td colSpan="6" className="text-center p-4 text-red-500">{error}</td>
-            </tr>
-          ) : qnas.length === 0 ? (
-            <tr>
-              <td colSpan="6" className="text-center p-4">Q&A 데이터가 없습니다.</td>
-            </tr>
-          ) : (
-            qnas.map(qna => (
-              <tr
-                key={qna.questionNo}
-                className="border-t cursor-pointer hover:bg-gray-100"
-                onClick={() => navigate(`/admin/noticemanager/qna/entry/${qna.questionNo}`)}
-              >
-                <td className="px-2 py-2 border text-center">{qna.questionNo}</td>
-                <td className="px-2 py-2 border text-center">{qna.memberNo}</td>
-                <td className="px-2 py-2 border break-words">{qna.questionContents}</td>
-                <td className="px-2 py-2 border break-words">{qna.answerContents}</td>
-                <td className="px-2 py-2 border text-center">{new Date(qna.createDate).toLocaleDateString('ko-KR')}</td>
-                <td className="px-2 py-2 border text-center">{qna.qnaRating}</td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-      <PageComponent
-          serverData={serverData}
-          movePage={(pageParam) => moveToList(pageParam, "notices")}
-        />
-
-    </div>
-  );
-};
-
-export default QnaList;
-*/
-
 import { useEffect, useState } from "react";
 import { getQnaList } from "../../../api/qnaApi";
 import useCustomMove from "../../../hooks/useCustomMove";
@@ -112,7 +13,7 @@ const initState = {
   prevPage: 0,
   nextPage: 0,
   totalPage: 0,
-  current: 0
+  current: 0,
 };
 
 const ListComponent = () => {
@@ -121,19 +22,38 @@ const ListComponent = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
 
   useEffect(() => {
-    getQnaList({ page, size, question: searchKeyword }).then((data) => {
-      console.log("📋 Q&A 리스트 응답:", data);
-      setServerData(data);
-    });
-  }, [page, size, refresh]);
+    console.log("🔄 [useEffect] Q&A 목록 요청 시작");
+    console.log("👉 파라미터:", { page, size, searchKeyword });
+
+    getQnaList({ page, size, question: searchKeyword })
+      .then((data) => {
+        console.log("✅ Q&A 목록 응답 도착:", data);
+
+        if (data && Array.isArray(data.dtoList)) {
+          setServerData(data);
+        } else {
+          console.warn("⚠️ dtoList가 없거나 배열이 아닙니다. 빈 목록 설정");
+          setServerData({ ...initState, dtoList: [] });
+        }
+      })
+      .catch((err) => {
+        console.error("❌ Q&A 목록 조회 실패:", err);
+      });
+  }, [page, size, refresh, searchKeyword]);
 
   const handleSearch = () => {
+    console.log("🔍 [handleSearch] 검색어:", searchKeyword);
     moveToList(1, "qna", { question: searchKeyword });
+  };
+
+  const handleReset = () => {
+    console.log("🔁 [handleReset] 전체 목록 보기");
+    setSearchKeyword("");
+    moveToList(1, "qna");
   };
 
   return (
     <div>
-      {/* 검색창 */}
       <div className="mb-4 flex gap-2">
         <input
           type="text"
@@ -148,35 +68,28 @@ const ListComponent = () => {
         >
           검색
         </button>
+        <button
+          onClick={handleReset}
+          className="bg-gray-300 text-black px-3 py-2 rounded hover:bg-gray-400"
+        >
+          전체 보기
+        </button>
       </div>
 
-      {/* 테이블 */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-300">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase">
-                Q&A 번호
-              </th>
-              <th className="px-6 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase">
-                회원 번호
-              </th>
-              <th className="px-6 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase">
-                질문
-              </th>
-              <th className="px-6 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase">
-                답변 상태
-              </th>
-              <th className="px-6 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase">
-                작성일
-              </th>
-              <th className="px-6 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase">
-                평점
-              </th>
+              <th className="px-6 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase">Q&A 번호</th>
+              <th className="px-6 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase">회원 번호</th>
+              <th className="px-6 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase">질문</th>
+              <th className="px-6 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase">답변 상태</th>
+              <th className="px-6 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase">작성일</th>
+              <th className="px-6 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase">평점</th>
             </tr>
           </thead>
           <tbody>
-            {serverData.dtoList.length === 0 ? (
+            {!Array.isArray(serverData.dtoList) || serverData.dtoList.length === 0 ? (
               <tr>
                 <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
                   🔍 검색 결과가 없습니다.
@@ -187,20 +100,15 @@ const ListComponent = () => {
                 <tr
                   key={item.questionNo}
                   className="hover:bg-gray-50 cursor-pointer"
-                  onClick={() =>
-                    moveToRead(`${item.questionNo}`, "qna")
-                  }
+                  onClick={() => {
+                    console.log("➡️ 상세보기 이동:", item.questionNo);
+                    moveToRead(`${item.questionNo}`, "qna");
+                  }}
                 >
-                  <td className="px-6 py-4 border-b text-sm">
-                    {item.questionNo}
-                  </td>
-                  <td className="px-6 py-4 border-b text-sm">
-                    {item.memberNo}
-                  </td>
-                  <td className="px-6 py-4 border-b text-sm">
-                    <div className="truncate max-w-xs">
-                      {item.questionContents}
-                    </div>
+                  <td className="px-6 py-4 border-b text-sm">{item.questionNo}</td>
+                  <td className="px-6 py-4 border-b text-sm">{item.memberNo}</td>
+                  <td className="px-6 py-4 border-b text-sm truncate max-w-xs">
+                    {item.questionContents}
                   </td>
                   <td className="px-6 py-4 border-b text-sm">
                     <span
@@ -215,7 +123,7 @@ const ListComponent = () => {
                   </td>
                   <td className="px-6 py-4 border-b text-sm">
                     {item.createDate
-                      ? new Date(item.createDate).toLocaleDateString('ko-KR')
+                      ? new Date(item.createDate).toLocaleDateString("ko-KR")
                       : "미정"}
                   </td>
                   <td className="px-6 py-4 border-b text-sm">
@@ -228,10 +136,12 @@ const ListComponent = () => {
         </table>
       </div>
 
-      {/* 페이지네이션 */}
       <PageComponent
         serverData={serverData}
-        movePage={(pageParam) => moveToList(pageParam, "qna")}
+        movePage={(pageParam) => {
+          console.log("📄 페이지 이동 요청:", pageParam);
+          moveToList(pageParam, "qna", { question: searchKeyword });
+        }}
       />
     </div>
   );

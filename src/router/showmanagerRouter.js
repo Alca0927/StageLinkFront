@@ -40,7 +40,7 @@ const showmanagerRoutor = () => {
             element : <Suspense fallback={Loading}><ShowAdd/></Suspense>
         },
         {
-            path: "show/read/:showNo",
+            path: "show/:showNo",
             element : <Suspense fallback={Loading}><ShowRead/></Suspense>
         },
         {
@@ -57,7 +57,7 @@ const showmanagerRoutor = () => {
             element : <Suspense fallback={Loading}><ShowInfoAdd/></Suspense>
         },
         {
-            path: "showinfo/read/:showInfo",
+            path: "showinfo/:showInfo",
             element : <Suspense fallback={Loading}><ShowInfoRead/></Suspense>
         },
         {
@@ -74,7 +74,7 @@ const showmanagerRoutor = () => {
             element : <Suspense fallback={Loading}><LocationAdd/></Suspense>
         },
         {
-            path: "location/read/:showlocation",
+            path: "location/:showlocation",
             element : <Suspense fallback={Loading}><LocationRead/></Suspense>
         },
         {
@@ -91,7 +91,7 @@ const showmanagerRoutor = () => {
             element : <Suspense fallback={Loading}><ActorAdd/></Suspense>
         },
         {
-            path: "actor/read/:actorNo",
+            path: "actor/:actorNo",
             element : <Suspense fallback={Loading}><ActorRead/></Suspense>
         },
         {
@@ -108,7 +108,7 @@ const showmanagerRoutor = () => {
             element : <Suspense fallback={Loading}><ActorShowAdd/></Suspense>
         },
         {
-            path: "actorshow/read/:actorNo/:showInfoId",
+            path: "actorshow/:actorNo/:showInfoId",
             element : <Suspense fallback={Loading}><ActorShowRead/></Suspense>
         },
         {
