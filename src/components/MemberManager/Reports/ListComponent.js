@@ -22,6 +22,7 @@ const ReportListComponent = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
 
   useEffect(() => {
+
     console.log("📌 디버깅: page =", page, "size =", size, "refresh =", refresh);
     console.log("📌 디버깅: 검색 키워드 =", searchKeyword);
 
@@ -42,6 +43,7 @@ const ReportListComponent = () => {
         setServerData(initState);
       });
   }, [page, size, refresh]);
+
 
   const handleSearch = () => {
     console.log("🔍 검색 버튼 클릭됨 - 키워드:", searchKeyword);
@@ -107,13 +109,8 @@ const ReportListComponent = () => {
             </tbody>
           </table>
         </div>
-
-        {/* 페이지네이션 */}
-        <PageComponent
-          serverData={serverData}
-          movePage={(pageParam) => moveToList(pageParam, "reports")}
-        />
       </div>
+      <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "reports")}/>
     </div>
   );
 };

@@ -3,9 +3,10 @@ import { API_SERVER_HOST } from "../config/server";
 
 const prefix = `${API_SERVER_HOST}/api/qna`;
 
-/**
- * Q&A 목록 조회 (검색, 페이징 포함) + 디버깅 로그 포함
- */
+
+ //Q&A 목록 조회 (검색, 페이징 포함) + 디버깅 로그 포함
+
+
 export const getQnaList = async ({ page = 1, size = 10, question = "" }) => {
   const params = { page, size };
   if (question) {
@@ -35,9 +36,9 @@ export const getQnaList = async ({ page = 1, size = 10, question = "" }) => {
   }
 };
 
-/**
- * Q&A 상세 조회
- */
+
+ //Q&A 상세 조회
+ 
 export const getOne = async (questionNo) => {
   console.log(`📥 [getOne] Q&A 번호: ${questionNo}`);
   const res = await jwtAxios.get(`${prefix}/${questionNo}`);
@@ -45,9 +46,9 @@ export const getOne = async (questionNo) => {
   return res.data;
 };
 
-/**
- * Q&A 답변 등록 또는 수정
- */
+
+//Q&A 답변 등록 또는 수정
+
 export const putOne = async (questionNo, qna) => {
   console.log(`✏️ [putOne] 수정 요청 - questionNo: ${questionNo}`, qna);
   const res = await jwtAxios.put(`${prefix}/${questionNo}`, qna);
@@ -55,9 +56,9 @@ export const putOne = async (questionNo, qna) => {
   return res.data;
 };
 
-/**
- * Q&A 삭제
- */
+
+//Q&A 삭제
+
 export const deleteOne = async (questionNo) => {
   console.log(`🗑️ [deleteOne] 삭제 요청 - questionNo: ${questionNo}`);
   const res = await jwtAxios.delete(`${prefix}/${questionNo}`);
@@ -65,10 +66,11 @@ export const deleteOne = async (questionNo) => {
   return res.data;
 };
 
-/**
- * Q&A 총 개수 조회
- */
+
+//Q&A 총 개수 조회
+
 export const getCount = async () => {
+
   console.log("📊 [getCount] 전체 개수 요청");
   const res = await jwtAxios.get(`${prefix}/count`);
   console.log("📦 [getCount] 응답:", res.data);
