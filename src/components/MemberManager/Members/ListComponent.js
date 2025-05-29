@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getList } from "../../../api/memberApi";
 import useCustomMove from "../../../hooks/useCustomMove";
 import PageComponent from "../../common/PageComponent";
-
 
 const initState = {
   dtoList: [],
@@ -10,70 +10,118 @@ const initState = {
   pageRequestDTO: null,
   prev: false,
   next: false,
-  totoalCount: 0,
+  totalCount: 0,
   prevPage: 0,
   nextPage: 0,
   totalPage: 0,
   current: 0
-}
+};
 
 const ListComponent = () => {
-    const {page,size, refresh,moveToList, moveToRead} = useCustomMove()
+  const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
+  const [serverData, setServerData] = useState(initState);
+  const [searchName, setSearchName] = useState('');
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-    const [serverData, setServerData] = useState(initState)
+  const fetchMembers = async (pageNum = page, name = '') => {
+    try {
+      const data = await getList({ page: pageNum, size, name });
+      console.log("🔥 서버 응답:", data);
+      setServerData(data);
+      setError(null);
+    } catch (error) {
+      console.error('❗ 회원 목록 조회 실패:', error);
+      const message = '서버와의 연결에 문제가 있습니다.';
+      setServerData(initState);
+      setError(message);
+    }
+  };
 
-    useEffect(() => {
-      getList({page,size}).then(data => {
-        console.log(data)
-        setServerData(data)
-      })
-    }, [page,size,refresh])
+  useEffect(() => {
+    fetchMembers(page, searchName);
+  }, [page, size, refresh]);
 
-    return (
-      <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">
-  
-      <div className="flex flex-wrap mx-auto justify-center p-6">
-  
-        {serverData.dtoList.map(member =>
-  /*
-        <div
-        key= {location.showlocation} 
-        className="w-full min-w-[400px]  p-2 m-2 rounded shadow-md"
-        onClick={() => moveToRead(location.showlocation, "location")} //이벤트 처리 추가 
-        > 
-*/
-        <div
-        key= {member.member_no} 
-        className="w-full min-w-[400px]  p-2 m-2 rounded shadow-md"
-        onClick={() => {
-  console.log(member.member_no);  // showlocation 값 로그 확인
-  moveToRead(member.member_no, "member");
-}} 
-        > 
-  
-          <div className="flex ">
-            <div className="font-extrabold text-2xl p-2 w-1/12">
-              {member.member_no}
-            </div>
-            <div className="text-1xl m-1 p-2 w-8/12 font-extrabold">
-              {member.id}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {member.name}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {member.email}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {member.user_state}
-            </div>
-          </div>
+  const handleSearch = () => {
+    moveToList(1, "member", { name: searchName });
+  };
+
+  return (
+    <div className="flex max-w-6xl mx-auto mt-8">
+      <div className="w-full">
+        <h2 className="text-2xl font-bold mb-6">회원 목록</h2>
+
+        {/* 검색창 */}
+        <div className="mb-4 flex items-center gap-4">
+          <input
+            type="text"
+            placeholder="회원명 검색"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+            className="border px-3 py-2 rounded w-64"
+          />
+          <button
+            onClick={handleSearch}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            검색
+          </button>
         </div>
-        )}
+
+        {/* 테이블 */}
+        <table className="w-full table-fixed border border-gray-300 text-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="w-2/12 px-4 py-2 border text-center">회원번호</th>
+              <th className="w-2/12 px-4 py-2 border text-center">아이디</th>
+              <th className="w-2/12 px-4 py-2 border text-center">이름</th>
+              <th className="w-2/12 px-4 py-2 border text-center">가입일자</th>
+              <th className="w-4/12 px-4 py-2 border text-center">이메일</th>
+              <th className="w-2/12 px-4 py-2 border text-center">상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            {error ? (
+              <tr>
+                <td colSpan="6" className="text-center text-red-500 py-4">
+                  ⚠ {error}
+                </td>
+              </tr>
+            ) : !serverData.dtoList || serverData.dtoList.length === 0 ? (
+              <tr className="bg-gray-100">
+                <td colSpan="6" className="text-center text-gray-500 py-4">
+                  🔍 검색 결과가 없습니다.
+                </td>
+              </tr>
+            ) : (
+              serverData.dtoList.map((member) => (
+                <tr
+                  key={member.member_no}
+                  className="bg-gray-100 cursor-pointer hover:bg-gray-200"
+                  onClick={() => {
+                    console.log(member.memberNo);
+                    moveToRead(member.memberNo, "members");
+                  }}
+                >
+                  <td className="px-4 py-2 border text-center">{member.memberNo}</td>
+                  <td className="px-4 py-2 border text-center">{member.userId}</td>
+                  <td className="px-4 py-2 border text-center">{member.name}</td>
+                  <td className="px-4 py-2 border text-center">{member.joinedDate || '-'}</td>
+                  <td className="px-4 py-2 border text-center">{member.userEmail}</td>
+                  <td className="px-4 py-2 border text-center">{member.memberState}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+
+        <PageComponent 
+          serverData={serverData} 
+          movePage={(pageParam) => moveToList(pageParam, "member")}
+        />
       </div>
-        <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "member")}></PageComponent>
     </div>
-    );
-}
+  );
+};
 
 export default ListComponent;

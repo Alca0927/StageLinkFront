@@ -22,11 +22,23 @@ const ReportListComponent = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
 
   useEffect(() => {
-    getList({ page, size, reason: searchKeyword }).then((data) => {
-      console.log("📋 불법 신고 리스트 응답:", data);
-      setServerData(data);
+  getList({ page, size, reason: searchKeyword }).then(data => {
+    console.log("📋 불법 신고 리스트 응답:", data);
+    
+    // API 응답 구조에 맞게 수정
+    setServerData({
+      ...initState,           // 기본값을 먼저
+      ...data,               // API 응답으로 덮어쓰기
+      dtoList: data?.content || [],  // content를 dtoList로 매핑
+      totalCount: data?.totalElements || 0,
+      totalPage: data?.totalPages || 0,
+      current: data?.pageable?.pageNumber || 0
     });
-  }, [page, size, refresh]);
+  }).catch((error) => {
+    console.error("API 호출 오류:", error);
+    setServerData(initState);
+  });
+}, [page, size, refresh]);
 
   const handleSearch = () => {
     moveToList(1, "reports", { reason: searchKeyword });
@@ -65,7 +77,7 @@ const ReportListComponent = () => {
               </tr>
             </thead>
             <tbody>
-              {serverData.dtoList.length === 0 ? (
+              {!serverData.dtoList || serverData.dtoList.length === 0 ? (
                 <tr>
                   <td colSpan="4" className="text-center p-8 text-gray-500">
                     🔍 검색 결과가 없습니다.
@@ -90,14 +102,8 @@ const ReportListComponent = () => {
             </tbody>
           </table>
         </div>
-
-        {/* 페이지네이션 */}
-        <PageComponent
-          serverData={serverData}
-          movePage={(pageParam) => moveToList(pageParam, "reports")}
-        />
       </div>
-      <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "report")}/>
+      <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "reports")}/>
     </div>
   );
 };

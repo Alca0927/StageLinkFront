@@ -15,7 +15,7 @@ const membermanagerRoutor = () => {
             element : <Suspense fallback={Loading}><MemberList/></Suspense>
         },
         {
-            path: "members/:member_no",
+            path: "members/read/:memberNo",
             element : <Suspense fallback={Loading}><MemberDetail/></Suspense>
         },
         {
@@ -23,7 +23,7 @@ const membermanagerRoutor = () => {
             element : <Suspense fallback={Loading}><ReportList/></Suspense>
         },
         {
-            path: "reports/:reportNo",
+            path: "reports/read/:reportNo",
             element : <Suspense fallback={Loading}><ReportDetail/></Suspense>
         }
     ]
