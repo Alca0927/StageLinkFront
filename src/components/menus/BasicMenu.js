@@ -5,12 +5,10 @@ import RemainingTimeBanner from "../RemainingTimeBanner";
 const BasicMenu = () => {
   const loginState = useSelector(state => state.login);  // ✅ login으로 접근
   const username = loginState?.username;
-  const roles = loginState?.roles || [];
 
-  console.log("🚨 [DEBUG] BasicMenu 렌더링됨");
-console.log("🧠 Redux 상태:", loginState);
-console.log("🧠 username:", loginState?.username);
-
+  //console.log("🚨 [DEBUG] BasicMenu 렌더링됨");
+  //console.log("🧠 Redux 상태:", loginState);
+  //console.log("🧠 username:", loginState?.username);
 
   return (
     <div className="w-full bg-blue-900 py-5 px-5">

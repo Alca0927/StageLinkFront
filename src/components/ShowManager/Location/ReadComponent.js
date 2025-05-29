@@ -46,7 +46,7 @@ const ReadComponent = ({ showlocation }) => {
       <h2 className="text-2xl font-bold text-blue-600 mb-6">Location Details</h2>
 
       {makeEditableDiv("showLocation", location.showlocation, true)}
-      {makeEditableDiv("facilityId", location.facilityId, false, handleChange("facilityId"))}
+      {makeEditableDiv("facilityId", location.facilityId, true)}
       {makeEditableDiv("locationName", location.locationName, false, handleChange("locationName"))}
       {makeEditableDiv("locationAddress", location.locationAddress, false, handleChange("locationAddress"))}
 

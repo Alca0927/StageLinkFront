@@ -3,33 +3,35 @@ import { API_SERVER_HOST } from "../config/server";
 
 
 // 서버 주소
-const prefix = `${API_SERVER_HOST}/showmanager/actorshow`
+const prefix = `${API_SERVER_HOST}/admin/showmanager/actorshow`
 
+// 상세 정보 읽기
 export const getOne = async (actorNo, showInfoId) => {
     const res = await jwtAxios.get(`${prefix}/${actorNo}/${showInfoId}`)
-    console.log("ActorShow 조회 결과:", res.data)
     return res.data
 }
 
+// 목록 읽기
 export const getList = async (pageParam) => {
     const {page, size} = pageParam
     const res = await jwtAxios.get(`${prefix}/list`, {params: {page:page, size:size}})
     return res.data
 }
 
+// 추가 하기
 export const postAdd = async (actorShowObj) => {
     const res = await jwtAxios.post(`${prefix}/add`, actorShowObj)
     return res.data
 }
 
-/*
+/* 삭제
 export const deleteOne = async (tno) => {
   const res = await jwtAxios.delete(`${prefix}/${tno}` )
   return res.data
 }
 */
 
-// ??
+// 수정 하기 
 export const putOne = async (actorShowObj) => {
     const { actorDTO, showInfoDTO } = actorShowObj;
     

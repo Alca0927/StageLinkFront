@@ -1,8 +1,8 @@
 import jwtAxios from "../util/jwtUtil";
-import { API_SERVER_HOST } from "./showApi";
+import { API_SERVER_HOST } from "../config/server"
 
 // 서버 주소
-const prefix = `${API_SERVER_HOST}/stat`
+const prefix = `${API_SERVER_HOST}/admin/stat`
 
 // 회원 통계 데이터 조회
 export const getMemberStat = async (year, month) => {

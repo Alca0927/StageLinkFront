@@ -1,20 +1,19 @@
-import axios from "axios";
+import jwtAxios from "../util/jwtUtil";
+import { API_SERVER_HOST } from "../config/server";
 
 // 서버 주소
-export const API_SERVER_HOST = "http://localhost:8080"
-
 const prefix = `${API_SERVER_HOST}/api/notices`
 
+// 상세 정보 읽기
 export const getOne = async (tno) => {
-    const res = await axios.get(`${prefix}/${tno}`)
-
+    const res = await jwtAxios.get(`${prefix}/${tno}`)
     return res.data
 }
 
+// 목록 읽기
 export const getList = async (pageParam) => {
     const {page, size} = pageParam
-    const res = await axios.get(`${prefix}/list`, {params: {page:page, size:size}})
-
+    const res = await jwtAxios.get(`${prefix}/list`, {params: {page:page, size:size}})
     return res.data
 }
 

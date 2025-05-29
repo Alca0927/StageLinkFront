@@ -5,15 +5,11 @@ import registermanagerRouter from "./registermanagerRouter"
 import membermanagerRouter from "./membermanagerRouter";
 import noticemanagerRoutor from "./noticemanagerRouter";
 import loginRouter from "./loginRouter";
-import LoginPage from "../pages/login/LoginPage";
+import LoginPage from "../pages/login/LoginPage"; // ?
 import statisticsRouter from "./statisticsRouter";
-
-
-
 import { createBrowserRouter } from "react-router-dom";
 
 const Loading = <div>Loading...</div>;
-
 
 const Main = lazy(() => import("../pages/MainPage"))
 const ShowManager = lazy(() => import("../pages/showmanager/ShowMainPage"))

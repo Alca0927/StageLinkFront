@@ -1,47 +1,35 @@
-import axios from 'axios';
+import jwtAxios from "../util/jwtUtil";
 import { API_SERVER_HOST } from "../config/server";
 
+// 스프링 부트 매핑명
+const prefix = `${API_SERVER_HOST}/admin/showmanager/location`;
 
-const prefix = `${API_SERVER_HOST}/showmanager/location`;
-
+// 상세 정보 읽기
 export const getOne = async (showlocation) => {
-  const token = localStorage.getItem("accessToken");
-  const res = await axios.get(`${prefix}/${showlocation}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
+  const res = await jwtAxios.get(`${prefix}/${showlocation}`, 
+);
   return res.data;
 };
 
+// 목록 읽기
 export const getList = async (pageParam) => {
   const { page, size } = pageParam;
-  const token = localStorage.getItem("accessToken");
-  const res = await axios.get(`${prefix}/list`, {
+  const res = await jwtAxios.get(`${prefix}/list`, {
     params: { page, size },
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
   });
   return res.data;
 };
 
+// 추가 하기
 export const postAdd = async (locationObj) => {
-  const token = localStorage.getItem("accessToken");
-  const res = await axios.post(`${prefix}/`, locationObj, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
+  const res = await jwtAxios.post(`${prefix}/`, locationObj, 
+);
   return res.data;
 };
 
+// 수정 하기
 export const putOne = async (location) => {
-  const token = localStorage.getItem("accessToken");
-  const res = await axios.put(`${prefix}/${location.showlocation}`, location, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
+  const res = await jwtAxios.put(`${prefix}/${location.showlocation}`, location, 
+);
   return res.data;
 };

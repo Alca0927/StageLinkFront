@@ -108,11 +108,11 @@ const showmanagerRoutor = () => {
             element : <Suspense fallback={Loading}><ActorShowAdd/></Suspense>
         },
         {
-            path: "actorshow/read/:actorNo/:showinfo",
+            path: "actorshow/read/:actorNo/:showInfoId",
             element : <Suspense fallback={Loading}><ActorShowRead/></Suspense>
         },
         {
-            path: "actorshow/modify/:actorNo/:showinfo",
+            path: "actorshow/modify/:actorNo/:showInfoId",
             element : <Suspense fallback={Loading}><ActorShowModify/></Suspense>
         },
     ]

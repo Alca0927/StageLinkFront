@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 const RegisterSideMenu = () => {
   const location = useLocation();
 
-  const linkClass = (path: string) =>
+  const linkClass = (path) =>
     `font-bold px-2 py-1 rounded transition ${
       location.pathname.includes(path)
         ? "bg-blue-700 text-white"

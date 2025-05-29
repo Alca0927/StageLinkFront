@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getList } from '../../../api/actorApi';
 import useCustomMove from '../../../hooks/useCustomMove';
+import PageComponent from "../../common/PageComponent";
 
 const initState = {
   dtoList: [],
@@ -16,13 +17,13 @@ const initState = {
 };
 
 const ListComponent = () => {
-  const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
+  const { page, size, refresh, moveToList, moveToRead, moveToAdd } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
   const [searchKeyword, setSearchKeyword] = useState('');
 
   useEffect(() => {
     getList({ page, size, name: searchKeyword }).then((data) => {
-      console.log('🔥 서버 응답:', data);
+      console.log('서버 응답:', data);
       setServerData(data);
     });
   }, [page, size, refresh, searchKeyword]);
@@ -31,6 +32,10 @@ const ListComponent = () => {
   const handleSearch = () => {
     moveToList(1, 'actor', { name: searchKeyword });
   };
+
+   const handleAdd = () => {
+    moveToAdd("actor")
+  }
 
   return (
     <div className="max-w-6xl mx-auto mt-10 px-4">
@@ -51,6 +56,8 @@ const ListComponent = () => {
           검색
         </button>
       </div>
+
+      <button onClick={handleAdd}>배우 추가</button>
 
       {/* 테이블 */}
       <div className="overflow-x-auto">
@@ -85,26 +92,7 @@ const ListComponent = () => {
           </tbody>
         </table>
       </div>
-
-      {/* 페이지네이션 */}
-      <div className="flex justify-center mt-6 space-x-2">
-        {Array.isArray(serverData.pageNumList) &&
-          serverData.pageNumList.map((pageNum) => (
-            <button
-              key={pageNum}
-              onClick={() => moveToList(pageNum, 'actor')}
-              className={`px-4 py-2 rounded text-sm font-medium ${
-                serverData.current === pageNum
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 hover:bg-gray-300'
-              }`}
-            >
-              {pageNum}
-            </button>
-          ))}
-      </div>
-
-        //<PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "actor")}></PageComponent>
+      <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "actor")}></PageComponent>
 
     </div>
   );

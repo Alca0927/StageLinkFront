@@ -81,14 +81,14 @@ const AddComponent = () => {
 
           <div className="flex justify-center">
       <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-        <div className="w-1/5 p-6 text-right font-bold">Show Info</div>
+        <div className="w-1/5 p-6 text-right font-bold">공연 상세 선택</div>
         <select
           className="w-4/5 p-6 rounded-r border border-solid border-neutral-500 shadow-md"
           name="showInfo"
           value={show.showInfoDTO.showInfo}
           onChange={handleShowInfoChange}
         >
-          <option value="">Select Show Info</option>
+          <option value="">공연을 선택하세요</option>
           {Array.isArray(showInfoList) &&
             showInfoList.map((info) => (
               <option key={info.showInfo} value={info.showInfo}>
@@ -102,7 +102,7 @@ const AddComponent = () => {
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">showStartTime</div>
+          <div className="w-1/5 p-6 text-right font-bold">공연 시작 시간</div>
           <input className="w-4/5 p-6 rounded-r border border-solid border-neutral-500 shadow-md" 
            name="showStartTime"
            type={'datetime-local'} 
@@ -115,7 +115,7 @@ const AddComponent = () => {
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">showEndTime</div>
+          <div className="w-1/5 p-6 text-right font-bold">공연 종료 시간</div>
           <input className="w-4/5 p-6 rounded-r border border-solid border-neutral-500 shadow-md" 
            name="showEndTime"
            type={'datetime-local'} 
@@ -128,7 +128,7 @@ const AddComponent = () => {
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">seatRPrice</div>
+          <div className="w-1/5 p-6 text-right font-bold">R석 가격</div>
           <input className="w-4/5 p-6 rounded-r border border-solid border-neutral-500 shadow-md" 
            name="seatRPrice"
            type={'text'} 
@@ -141,7 +141,7 @@ const AddComponent = () => {
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">seatAPrice</div>
+          <div className="w-1/5 p-6 text-right font-bold">A석 가격</div>
           <input className="w-4/5 p-6 rounded-r border border-solid border-neutral-500 shadow-md" 
            name="seatAPrice"
            type={'text'} 
@@ -154,7 +154,7 @@ const AddComponent = () => {
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">seatSPrice</div>
+          <div className="w-1/5 p-6 text-right font-bold">S석 가격</div>
           <input className="w-4/5 p-6 rounded-r border border-solid border-neutral-500 shadow-md" 
            name="seatSPrice"
            type={'text'} 
@@ -167,7 +167,7 @@ const AddComponent = () => {
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">seatVipPrice</div>
+          <div className="w-1/5 p-6 text-right font-bold">Vip석 가격</div>
           <input className="w-4/5 p-6 rounded-r border border-solid border-neutral-500 shadow-md" 
            name="seatVipPrice"
            type={'text'} 
@@ -180,7 +180,7 @@ const AddComponent = () => {
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">seatRCount</div>
+          <div className="w-1/5 p-6 text-right font-bold">R석 갯수</div>
           <input className="w-4/5 p-6 rounded-r border border-solid border-neutral-500 shadow-md" 
            name="seatRCount"
            type={'text'} 
@@ -193,7 +193,7 @@ const AddComponent = () => {
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">seatACount</div>
+          <div className="w-1/5 p-6 text-right font-bold">A석 갯수</div>
           <input className="w-4/5 p-6 rounded-r border border-solid border-neutral-500 shadow-md" 
            name="seatACount"
            type={'text'} 
@@ -206,7 +206,7 @@ const AddComponent = () => {
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">seatSCount</div>
+          <div className="w-1/5 p-6 text-right font-bold">S석 갯수</div>
           <input className="w-4/5 p-6 rounded-r border border-solid border-neutral-500 shadow-md" 
            name="seatSCount"
            type={'text'} 
@@ -220,7 +220,7 @@ const AddComponent = () => {
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">seatVipCount</div>
+          <div className="w-1/5 p-6 text-right font-bold">VIP석 갯수</div>
           <input className="w-4/5 p-6 rounded-r border border-solid border-neutral-500 shadow-md" 
            name="seatVipCount"
            type={'text'} 
@@ -233,7 +233,7 @@ const AddComponent = () => {
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">showState</div>
+          <div className="w-1/5 p-6 text-right font-bold">공연 상태</div>
           <input className="w-4/5 p-6 rounded-r border border-solid border-neutral-500 shadow-md" 
            name="showState"
            type={'text'} 
@@ -250,7 +250,7 @@ const AddComponent = () => {
           className="rounded p-4 w-36 bg-blue-500 text-xl  text-white "
           onClick={handleClickAdd}          
           >
-          ADD
+          추가
           </button>
         </div>
       </div>

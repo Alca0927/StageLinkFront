@@ -97,6 +97,7 @@ const ReportListComponent = () => {
           movePage={(pageParam) => moveToList(pageParam, "reports")}
         />
       </div>
+      <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "report")}/>
     </div>
   );
 };

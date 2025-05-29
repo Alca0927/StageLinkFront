@@ -83,23 +83,7 @@ const ListComponent = () => {
           </tbody>
         </table>
       </div>
-
-      <div className="flex justify-center mt-6 space-x-2">
-        {serverData.pageNumList.map((pageNum) => (
-          <button
-            key={pageNum}
-            onClick={() => moveToList(pageNum, "showinfo")}
-            className={`px-4 py-2 rounded text-sm font-medium ${
-              serverData.current === pageNum
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-          >
-            {pageNum}
-          </button>
-        ))}
-      </div>
-        //<PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam,"showinfo")}></PageComponent>
+      <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam,"showinfo")}></PageComponent>
     </div>
   );
 };
