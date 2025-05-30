@@ -51,10 +51,11 @@ export const getOne = async (questionNo) => {
 
 export const putOne = async (questionNo, qna) => {
   console.log(`✏️ [putOne] 수정 요청 - questionNo: ${questionNo}`, qna);
-  const res = await jwtAxios.put(`${prefix}/${questionNo}`, qna);
+  const res = await jwtAxios.put(`${prefix}/${questionNo}/answer`, qna); // <-- ✅ 수정된 경로
   console.log("📦 [putOne] 응답:", res.data);
   return res.data;
 };
+
 
 
 //Q&A 삭제

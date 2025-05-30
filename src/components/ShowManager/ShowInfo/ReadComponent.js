@@ -1,147 +1,165 @@
 import { useEffect, useState } from "react";
 import { getOne, putOne } from "../../../api/showInfoApi";
 import useCustomMove from "../../../hooks/useCustomMove";
-import { getList as getLocationList} from "../../../api/showLocationApi";
+import { getList as getLocationList } from "../../../api/showLocationApi";
 
 const initState = {
-    showInfo: 0,
-    showPoster: "",
-    showName: "",
-    showExplain: "",
-    showCategory: "",
-    showAge: 0,
-    showDuration: "",
-    showLocationDTO: {
-        showlocation: "",
-        locationName: "",
-    },
-    showStyUrl1: "",
-    showStyUrl2: "",
-    showStyUrl3: "",
-    showStyUrl4: ""
-}
+  showInfo: 0,
+  showPoster: "",
+  showName: "",
+  showExplain: "",
+  showCategory: "",
+  showAge: 0,
+  showDuration: "",
+  showLocationDTO: {
+    showlocation: "",
+    locationName: "",
+  },
+  showStyUrl1: "",
+  showStyUrl2: "",
+  showStyUrl3: "",
+  showStyUrl4: "",
+};
 
-const ReadComponent = ({showInfo}) => {
-    const [showinfo, setShowInfo] = useState(initState)
-    const {moveToList} = useCustomMove()
-    const [locationList, setLocationList] = useState([]);
+const ReadComponent = ({ showInfo }) => {
+  const [showinfo, setShowInfo] = useState(initState);
+  const [locationList, setLocationList] = useState([]);
+  const { moveToList } = useCustomMove();
 
-    useEffect(() => {
-        getOne(showInfo).then(data => {
-            console.log(data)
-            setShowInfo(data)
-        })
-        .catch(error => {
-            console.error("Error fetching ShowInfo :", error)
-        })
+  useEffect(() => {
+    getOne(showInfo)
+      .then((data) => {
+        setShowInfo(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching ShowInfo:", error);
+      });
 
-        // 위치 리스트 가져오기
-        getLocationList({ page: 1, size: 100 }).then(data => {
-            console.log("Location List:", data);
-            if (data.dtoList && Array.isArray(data.dtoList)) {
-                setLocationList(data.dtoList);
-            } else {
-                console.error("Expected an array for locationList, but got", data);
-            }
-        }).catch(error => {
-            console.error("Error fetching location list:", error);
-        });
-    }, [showInfo])
+    getLocationList({ page: 1, size: 100 })
+      .then((data) => {
+        if (Array.isArray(data.dtoList)) {
+          setLocationList(data.dtoList);
+        } else {
+          console.error("Expected array for locationList, got", data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching location list:", error);
+      });
+  }, [showInfo]);
 
-    const handleClickModify = () => { // 수정 버튼 클릭시 
-        const requestData = {
-            ...showinfo,
-            showLocationDTO: {
-                ...showinfo.showLocationDTO,
-                showlocation: showinfo.showLocationDTO.showlocation,
-            },
-        };
-
-        putOne(requestData).then(data => {
-            alert("수정이 완료되었습니다.");
-            moveToList(null, "showinfo");
-        }).catch(error => {
-            console.error("Update failed:", error);
-            alert("수정 중 오류가 발생했습니다.");
-        });
-    }
-
-    const handleChangeShowinfo = (e) => {
-        setShowInfo({
-            ...showinfo,
-            [e.target.name]: e.target.value
-        });
-    }
-
-    const handleLocationChange = (e) => {
-        const selectedLocationId = e.target.value;
-        const selectedLocation = locationList.find(loc => loc.showlocation == selectedLocationId);
-        
-        setShowInfo({
-            ...showinfo,
-            showLocationDTO: {
-                showlocation: selectedLocationId,
-                locationName: selectedLocation ? selectedLocation.locationName : "",
-            },
-        });
+  const handleClickModify = () => {
+    const requestData = {
+      ...showinfo,
+      showLocationDTO: {
+        showlocation: showinfo.showLocationDTO.showlocation,
+        locationName: showinfo.showLocationDTO.locationName,
+      },
     };
 
-    return (
-        <div className="border-2 border-sky-200 mt-10 m-2 p-4">
-            {makeEditableDiv('showInfo', showinfo.showInfo, true)}
-            {makeEditableDiv('showPoster', showinfo.showPoster, false, handleChangeShowinfo)}
-            {makeEditableDiv('showName', showinfo.showName, false, handleChangeShowinfo)}
-            {makeEditableDiv('showExplain', showinfo.showExplain, false, handleChangeShowinfo)}
-            {makeEditableDiv('showCategory', showinfo.showCategory, false, handleChangeShowinfo)}
-            {makeEditableDiv('showAge', showinfo.showAge, false, handleChangeShowinfo)}
-            {makeEditableDiv('showDuration', showinfo.showDuration, false, handleChangeShowinfo)}
-            
-            {makeSelectableDiv('locationName', showinfo.showLocationDTO?.showlocation, false, handleLocationChange, locationList)}
-            
-            {makeEditableDiv('showStyUrl1', showinfo.showStyUrl1, false, handleChangeShowinfo)}
-            {makeEditableDiv('showStyUrl2', showinfo.showStyUrl2, false, handleChangeShowinfo)}
-            {makeEditableDiv('showStyUrl3', showinfo.showStyUrl3, false, handleChangeShowinfo)}
-            {makeEditableDiv('showStyUrl4', showinfo.showStyUrl4, false, handleChangeShowinfo)}
+    putOne(requestData)
+      .then(() => {
+        alert("수정이 완료되었습니다.");
+        moveToList(null, "showinfo");
+      })
+      .catch((error) => {
+        console.error("Update failed:", error);
+        alert("수정 중 오류가 발생했습니다.");
+      });
+  };
 
-            {/* 버튼 */}
-            <div className="flex justify-end p-4">
-                <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500" onClick={() => moveToList(null, "showinfo")}>목록</button>
-                <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500" onClick={handleClickModify}>수정</button>
-            </div>
-        </div>
-    );
-}
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setShowInfo((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-const makeEditableDiv = (title, value, readOnly = false, onChange) => 
-    <div className="flex items-center py-4 border-b">
-        <div className="w-1/4 text-right pr-4 font-bold text-gray-700">{title}</div>
-        <input
-            type="text"
-            name={title}
-            value={value || ""}
-            readOnly={readOnly}
-            onChange={onChange}
-            className={`w-3/4 ${readOnly ? "bg-gray-100" : "bg-white"} p-3 rounded shadow-sm text-gray-900 font-medium border border-gray-300`}
-        />
-    </div>
+  const handleLocationChange = (e) => {
+    const selectedId = e.target.value;
+    const selected = locationList.find((loc) => loc.showlocation == selectedId);
+    setShowInfo((prev) => ({
+      ...prev,
+      showLocationDTO: {
+        showlocation: selectedId,
+        locationName: selected?.locationName || "",
+      },
+    }));
+  };
 
-const makeSelectableDiv = (title, value, readOnly = false, onChange, locationList) => 
-    <div className="flex items-center py-4 border-b">
-        <div className="w-1/4 text-right pr-4 font-bold text-gray-700">{title}</div>
-        <select
-            className="w-3/4 p-3 rounded border border-gray-300 shadow-sm"
-            name="showlocation"
-            value={value || ""}
-            disabled={readOnly}
-            onChange={onChange}
+  return (
+    <div className="max-w-3xl mx-auto mt-10 bg-white shadow-md rounded-lg p-8 border border-gray-300">
+      <h2 className="text-2xl font-bold text-blue-600 mb-6">ShowInfo Details</h2>
+
+      {makeEditableDiv("showInfo", showinfo.showInfo, true)}
+      {makeEditableDiv("showPoster", showinfo.showPoster, false, handleChange)}
+      {makeEditableDiv("showName", showinfo.showName, false, handleChange)}
+      {makeEditableDiv("showExplain", showinfo.showExplain, false, handleChange)}
+      {makeEditableDiv("showCategory", showinfo.showCategory, false, handleChange)}
+      {makeEditableDiv("showAge", showinfo.showAge, false, handleChange)}
+      {makeEditableDiv("showDuration", showinfo.showDuration, false, handleChange)}
+      {makeSelectableDiv("locationName", showinfo.showLocationDTO?.showlocation, false, handleLocationChange, locationList)}
+      {makeEditableDiv("showStyUrl1", showinfo.showStyUrl1, false, handleChange)}
+      {makeEditableDiv("showStyUrl2", showinfo.showStyUrl2, false, handleChange)}
+      {makeEditableDiv("showStyUrl3", showinfo.showStyUrl3, false, handleChange)}
+      {makeEditableDiv("showStyUrl4", showinfo.showStyUrl4, false, handleChange)}
+
+      <div className="flex justify-end space-x-4 mt-10">
+        <button
+          type="button"
+          className="px-6 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded"
+          onClick={() => moveToList(null, "showinfo")}
         >
-            <option value="">Select Location</option>
-            {Array.isArray(locationList) && locationList.map(location => (
-                <option key={location.showlocation} value={location.showlocation}>
-                    {location.locationName}
-                </option>
-            ))}
-        </select>
+          목록
+        </button>
+        <button
+          type="button"
+          className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded"
+          onClick={handleClickModify}
+        >
+          수정
+        </button>
+      </div>
     </div>
+  );
+};
 
-export default ReadComponent
+// 📦 입력 필드 공통 구조
+const makeEditableDiv = (title, value, readOnly = false, onChange) => (
+  <div className="flex items-center py-4 border-b">
+    <div className="w-1/4 text-right pr-4 font-bold text-gray-700">{title}</div>
+    <input
+      type="text"
+      name={title}
+      value={value || ""}
+      readOnly={readOnly}
+      onChange={onChange}
+      className={`w-3/4 ${readOnly ? "bg-gray-100" : "bg-white"} p-3 rounded shadow-sm text-gray-900 font-medium border border-gray-300`}
+    />
+  </div>
+);
+
+// 📦 선택 필드 공통 구조
+const makeSelectableDiv = (title, value, readOnly = false, onChange, list) => (
+  <div className="flex items-center py-4 border-b">
+    <div className="w-1/4 text-right pr-4 font-bold text-gray-700">{title}</div>
+    <select
+      name="showlocation"
+      value={value || ""}
+      disabled={readOnly}
+      onChange={onChange}
+      className="w-3/4 p-3 rounded border border-gray-300 shadow-sm bg-white"
+    >
+      <option value="">Select Location</option>
+      {Array.isArray(list) &&
+        list.map((item) => (
+          <option key={item.showlocation} value={item.showlocation}>
+            {item.locationName}
+          </option>
+        ))}
+    </select>
+  </div>
+);
+
+export default ReadComponent;
