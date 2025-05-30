@@ -11,14 +11,17 @@ export const getOne = async (showlocation) => {
   return res.data;
 };
 
-// 목록 읽기
 export const getList = async (pageParam) => {
-  const { page, size } = pageParam;
-  const res = await jwtAxios.get(`${prefix}/list`, {
-    params: { page, size },
-  });
+  const { page, size, type, keyword } = pageParam;
+  const params = { page, size };
+  if (type && keyword) {
+    params.type = type;
+    params.keyword = keyword;
+  }
+  const res = await jwtAxios.get(`${prefix}/list`, { params });
   return res.data;
 };
+
 
 // 추가 하기
 export const postAdd = async (locationObj) => {

@@ -13,11 +13,14 @@ export const getOne = async (showInfo) => {
 
 // 목록 읽기
 export const getList = async (pageParam) => {
-    const {page, size} = pageParam
-    const res = await jwtAxios.get(`${prefix}/list`, {params: {page:page, size:size}})
+  const { page, size, type, keyword } = pageParam;
 
-    return res.data
-}
+  const res = await jwtAxios.get(`${prefix}/list`, {
+    params: { page, size, type, keyword },
+  });
+
+  return res.data;
+};
 
 // 추가 하기
 export const postAdd = async (showinfoObj) => {

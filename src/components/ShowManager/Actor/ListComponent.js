@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getList } from '../../../api/actorApi';
 import useCustomMove from '../../../hooks/useCustomMove';
-import PageComponent from "../../common/PageComponent";
+import PageComponent from '../../common/PageComponent';
 
 const initState = {
   dtoList: [],
@@ -20,22 +20,29 @@ const ListComponent = () => {
   const { page, size, refresh, moveToList, moveToRead, moveToAdd } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [isSearchActive, setIsSearchActive] = useState(false);
 
+  // 기본 목록 조회 (검색 X)
   useEffect(() => {
-    getList({ page, size, name: searchKeyword }).then((data) => {
-      console.log('서버 응답:', data);
+    if (!isSearchActive) {
+      getList({ page, size }).then((data) => {
+        setServerData(data);
+      });
+    }
+  }, [page, size, refresh, isSearchActive]);
+
+  // 검색 버튼 클릭 시 실행
+  const handleSearch = () => {
+    setIsSearchActive(true);
+    getList({ page: 1, size, name: searchKeyword }).then((data) => {
       setServerData(data);
     });
-  }, [page, size, refresh, searchKeyword]);
-
-
-  const handleSearch = () => {
     moveToList(1, 'actor', { name: searchKeyword });
   };
 
-   const handleAdd = () => {
-    moveToAdd("actor")
-  }
+  const handleAdd = () => {
+    moveToAdd('actor');
+  };
 
   return (
     <div className="max-w-6xl mx-auto mt-10 px-4">
@@ -57,7 +64,9 @@ const ListComponent = () => {
         </button>
       </div>
 
-      <button onClick={handleAdd}>배우 추가</button>
+      <button onClick={handleAdd} className="mb-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        배우 추가
+      </button>
 
       {/* 테이블 */}
       <div className="overflow-x-auto">
@@ -72,7 +81,7 @@ const ListComponent = () => {
           <tbody>
             {!serverData.dtoList || serverData.dtoList.length === 0 ? (
               <tr>
-                <td colSpan="4" className="text-center text-gray-500 py-6">
+                <td colSpan="3" className="text-center text-gray-500 py-6">
                   🔍 검색 결과가 없습니다.
                 </td>
               </tr>
@@ -92,8 +101,15 @@ const ListComponent = () => {
           </tbody>
         </table>
       </div>
-      <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "actor")}></PageComponent>
 
+      <PageComponent
+        serverData={serverData}
+        movePage={(pageParam) =>
+          moveToList(pageParam, 'actor', isSearchActive && searchKeyword.trim() !== ''
+            ? { name: searchKeyword }
+            : {})
+        }
+      />
     </div>
   );
 };
