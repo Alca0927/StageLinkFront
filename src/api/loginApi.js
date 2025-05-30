@@ -1,3 +1,5 @@
+// 📁 src/api/loginApi.js
+
 import axios from "axios";
 import { API_SERVER_HOST } from "../config/server";
 
@@ -15,11 +17,9 @@ export const loginPost = async (loginParam) => {
   try {
     const res = await axios.post(`${host}/login`, form, headers);
 
-    // 서버 응답 로그
     console.log("✅ 로그인 성공 응답:", res.data);
 
-    // accessToken, refreshToken 모두 있는지 체크
-    if (res.data ) {
+    if (res.data?.accessToken && res.data?.refreshToken) {
       return res.data;
     } else {
       console.warn("⚠️ 로그인 성공했지만 토큰이 없습니다.");
