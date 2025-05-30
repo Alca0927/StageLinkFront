@@ -8,32 +8,40 @@ const jwtAxios = axios.create({
   withCredentials: true,
 });
 
-// 토큰 리프레시 요청
-const refreshJWT = async (refreshToken) => {
-  try {
-    const res = await axios.get(
-      `${API_SERVER_HOST}/api/login/refresh?refreshToken=${refreshToken}`
-    );
+// 🔁 토큰 리프레시
+const refreshJWT = async () => {
+  const refreshToken = localStorage.getItem("refreshToken");
+  const accessToken = localStorage.getItem("accessToken");
 
-    console.log("🔁 Token refreshed:", res.data);
-
-    localStorage.setItem("accessToken", res.data.accessToken);
-    localStorage.setItem("refreshToken", res.data.refreshToken);
-
-    return res.data;
-  } catch (err) {
-    console.error("❌ Token refresh failed", err);
-    throw err;
+  if (!refreshToken || !accessToken) {
+    throw new Error("NO_TOKENS");
   }
+
+  const res = await axios.post(
+    `${API_SERVER_HOST}/admin/api/login/refresh`,
+    { refreshToken },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  const { accessToken: newAccessToken, refreshToken: newRefreshToken } = res.data;
+
+  localStorage.setItem("accessToken", newAccessToken);
+  localStorage.setItem("refreshToken", newRefreshToken);
+
+  console.log("🔁 Token refreshed!");
+
+  return newAccessToken;
 };
 
 // 요청 인터셉터
 jwtAxios.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      throw new Error("REQUIRE_LOGIN");
-    }
+    if (!accessToken) throw new Error("REQUIRE_LOGIN");
 
     config.headers.Authorization = `Bearer ${accessToken}`;
     return config;
@@ -43,30 +51,26 @@ jwtAxios.interceptors.request.use(
 
 // 응답 인터셉터
 jwtAxios.interceptors.response.use(
-  async (res) => {
-    const data = res.data;
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
-    if (data && data.error === "ERROR_ACCESS_TOKEN") {
-      console.log("🔁 Access token expired. Refreshing...");
-
-      const refreshToken = localStorage.getItem("refreshToken");
-      const originalRequest = res.config;
-
-      if (originalRequest._retry) {
-        return Promise.reject("Token refresh retry failed");
+    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+      try {
+        originalRequest._retry = true;
+        const newAccessToken = await refreshJWT();
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return jwtAxios(originalRequest);
+      } catch (refreshError) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
       }
-
-      originalRequest._retry = true;
-
-      const newTokens = await refreshJWT(refreshToken);
-      originalRequest.headers.Authorization = `Bearer ${newTokens.accessToken}`;
-
-      return jwtAxios(originalRequest);
     }
 
-    return res;
-  },
-  (err) => Promise.reject(err)
+    return Promise.reject(error);
+  }
 );
 
 export default jwtAxios;

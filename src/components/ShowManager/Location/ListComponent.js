@@ -13,28 +13,35 @@ const initState = {
   prevPage: 0,
   nextPage: 0,
   totalPage: 0,
-  current: 0
+  current: 0,
 };
 
 const ListComponent = () => {
   const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const fixedSearchType = "l"; // 장소명 검색 고정
+
+  const fetchData = (keyword = "") => {
+    const params = keyword.trim()
+      ? { page, size, type: fixedSearchType, keyword }
+      : { page, size };
+    getList(params).then((data) => setServerData(data));
+  };
 
   useEffect(() => {
-    getList({ page, size, name: searchKeyword }).then((data) => {
-      console.log("🔥 서버 응답:", data);
-      setServerData(data);
-    });
-  }, [page, size, refresh, searchKeyword]);
+    fetchData(); // 전체 조회
+  }, [page, size, refresh]);
 
   const handleSearch = () => {
-    moveToList(1, "location", { name: searchKeyword });
+    fetchData(searchKeyword);
+    moveToList(1, "location", searchKeyword.trim()
+      ? { type: fixedSearchType, keyword: searchKeyword }
+      : {});
   };
 
   return (
     <div className="max-w-6xl mx-auto mt-10 px-4">
-
       {/* 검색창 */}
       <div className="mb-4 flex items-center gap-4">
         <input
@@ -87,8 +94,15 @@ const ListComponent = () => {
           </tbody>
         </table>
       </div>
-      <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "location")}></PageComponent>
 
+      <PageComponent
+        serverData={serverData}
+        movePage={(pageParam) =>
+          moveToList(pageParam, "location", searchKeyword.trim()
+            ? { type: fixedSearchType, keyword: searchKeyword }
+            : {})
+        }
+      />
     </div>
   );
 };

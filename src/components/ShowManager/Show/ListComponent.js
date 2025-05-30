@@ -18,28 +18,43 @@ const initState = {
 
 const ListComponent = () => {
   const { page, size, refresh, moveToList, moveToRead, moveToAdd } = useCustomMove();
-  const [serverData, setServerData] = useState(initState);
-  const [searchKeyword, setSearchKeyword] = useState("");
 
-  useEffect(() => {
-    getList({ page, size, name: searchKeyword }).then((data) => {
-      console.log("🔥 서버 응답:", data);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [serverData, setServerData] = useState(initState);
+  const fixedSearchType = "t"; // 공연명 고정
+
+  // ✅ 페이지 이동, 새로고침, 검색 실행 시에만 호출됨
+  const fetchData = (keyword = "") => {
+    const params = keyword.trim()
+      ? { page, size, type: fixedSearchType, keyword }
+      : { page, size };
+
+    getList(params).then((data) => {
       setServerData(data);
     });
-  }, [page, size, refresh, searchKeyword]);
+  };
 
+  // ✅ 페이지 로딩 시 전체 목록
+  useEffect(() => {
+    fetchData(); // keyword 없이 호출
+  }, [page, size, refresh]);
+
+  // ✅ 검색 버튼 누를 때 실행
   const handleSearch = () => {
-    moveToList(1, "show", { name: searchKeyword });
+    fetchData(searchKeyword);
+    moveToList(1, "show", searchKeyword.trim()
+      ? { type: fixedSearchType, keyword: searchKeyword }
+      : {});
   };
 
   const handleAdd = () => {
     moveToAdd("show");
-  }
+  };
 
   return (
     <div className="max-w-6xl mx-auto mt-10 px-4">
 
-      {/* 검색창 */}
+      {/* 🔍 검색창 */}
       <div className="mb-4 flex items-center gap-4">
         <input
           type="text"
@@ -57,10 +72,17 @@ const ListComponent = () => {
         </button>
       </div>
 
-      <div>
-        <button onClick={handleAdd}>공연 추가</button>
+      {/* 공연 추가 버튼 */}
+      <div className="mb-4">
+        <button
+          onClick={handleAdd}
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
+          공연 추가
+        </button>
       </div>
 
+      {/* 리스트 테이블 */}
       <div className="overflow-x-auto">
         <table className="min-w-full table-auto border border-gray-300 text-sm">
           <thead className="bg-gray-100">
@@ -75,7 +97,7 @@ const ListComponent = () => {
             {serverData.dtoList.length === 0 ? (
               <tr>
                 <td colSpan="4" className="text-center text-gray-500 py-6">
-                  🔍 데이터가 없습니다.
+                  ❌ 결과가 없습니다.
                 </td>
               </tr>
             ) : (
@@ -95,8 +117,16 @@ const ListComponent = () => {
           </tbody>
         </table>
       </div>
-      <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "show")}></PageComponent>
 
+      {/* 페이지네이션 */}
+      <PageComponent
+        serverData={serverData}
+        movePage={(pageParam) =>
+          moveToList(pageParam, "show", searchKeyword.trim()
+            ? { type: fixedSearchType, keyword: searchKeyword }
+            : {})
+        }
+      />
     </div>
   );
 };

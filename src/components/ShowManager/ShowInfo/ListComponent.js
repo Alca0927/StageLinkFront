@@ -20,22 +20,35 @@ const ListComponent = () => {
   const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const fixedSearchType = "t"; // 공연명 검색 고정
 
-  useEffect(() => {
-    getList({ page, size, name: searchKeyword }).then((data) => {
-      console.log("🔥 서버 응답:", data);
+  // ✅ 페이지 로딩, 이동, 새로고침 시 데이터 호출
+  const fetchData = (keyword = "") => {
+    const params = keyword.trim()
+      ? { page, size, type: fixedSearchType, keyword }
+      : { page, size };
+
+    getList(params).then((data) => {
       setServerData(data);
     });
-  }, [page, size, refresh, searchKeyword]);
+  };
 
+  useEffect(() => {
+    fetchData(); // 전체 목록 호출
+  }, [page, size, refresh]);
+
+  // ✅ 검색 버튼 클릭 시 실행
   const handleSearch = () => {
-    moveToList(1, "showinfo", { name: searchKeyword });
+    fetchData(searchKeyword);
+    moveToList(1, "showinfo", searchKeyword.trim()
+      ? { type: fixedSearchType, keyword: searchKeyword }
+      : {});
   };
 
   return (
     <div className="max-w-4xl mx-auto mt-10 px-4">
 
-      {/* 검색창 */}
+      {/* 🔍 검색창 */}
       <div className="mb-4 flex items-center gap-4">
         <input
           type="text"
@@ -53,6 +66,7 @@ const ListComponent = () => {
         </button>
       </div>
 
+      {/* 리스트 테이블 */}
       <div className="overflow-x-auto">
         <table className="min-w-full table-auto border border-gray-300 text-sm">
           <thead className="bg-gray-100">
@@ -65,7 +79,7 @@ const ListComponent = () => {
             {serverData.dtoList.length === 0 ? (
               <tr>
                 <td colSpan="2" className="text-center text-gray-500 py-6">
-                  🔍 데이터가 없습니다.
+                  🔍 결과가 없습니다.
                 </td>
               </tr>
             ) : (
@@ -83,7 +97,16 @@ const ListComponent = () => {
           </tbody>
         </table>
       </div>
-      <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam,"showinfo")}></PageComponent>
+
+      {/* 페이지네이션 */}
+      <PageComponent
+        serverData={serverData}
+        movePage={(pageParam) =>
+          moveToList(pageParam, "showinfo", searchKeyword.trim()
+            ? { type: fixedSearchType, keyword: searchKeyword }
+            : {})
+        }
+      />
     </div>
   );
 };
