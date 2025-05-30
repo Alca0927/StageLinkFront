@@ -19,11 +19,11 @@ const registermanagerRoutor = () => {
             element : <Suspense fallback={Loading}><RefundList/></Suspense>
         },
         {
-            path: "reservation/read/:reservationNo",
+            path: "reservation/:reservationNo",
             element : <Suspense fallback={Loading}><ReservationRead/></Suspense>
         },
         {
-            path: "refund/read/:refundNo",
+            path: "refund/:refundNo",
             element : <Suspense fallback={Loading}><RefundRead/></Suspense>
         },
     ]

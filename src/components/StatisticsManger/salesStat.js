@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getSalesStat, getPrevMonthSalesStat, recalculateSalesStat } from '../../api/StatApi';
+import { getSalesStat, getPrevMonthSalesStat, recalculateSalesStat, monthlyShowSalesDetail } from '../../api/StatApi';
 
 const SalesStatComponent = ({ year: initialYear, month: initialMonth }) => {
     const navigate = useNavigate();
@@ -16,6 +16,7 @@ const SalesStatComponent = ({ year: initialYear, month: initialMonth }) => {
     // 통계 데이터 상태
     const [currentStat, setCurrentStat] = useState(null);
     const [prevStat, setPrevStat] = useState(null);
+    const [showDetails, setShowDetails] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [hasCurrentData, setHasCurrentData] = useState(true);
@@ -54,6 +55,38 @@ const SalesStatComponent = ({ year: initialYear, month: initialMonth }) => {
         return new Intl.NumberFormat('ko-KR').format(amount);
     };
 
+    // 공연별 데이터 그룹화 함수
+    const groupShowDetails = (details) => {
+        if (!details || details.length === 0) return [];
+        
+        const grouped = details.reduce((acc, item) => {
+            const key = `${item.showNo}-${item.showName}`;
+            if (!acc[key]) {
+                acc[key] = {
+                    showNo: item.showNo,
+                    showName: item.showName,
+                    seats: [],
+                    totalSales: 0,
+                    totalReserved: 0
+                };
+            }
+            
+            acc[key].seats.push({
+                seatClass: item.seatClass,
+                reservedCount: item.reservedCount,
+                seatPrice: item.seatPrice,
+                sales: item.sales
+            });
+            
+            acc[key].totalSales += item.sales;
+            acc[key].totalReserved += item.reservedCount;
+            
+            return acc;
+        }, {});
+        
+        return Object.values(grouped).sort((a, b) => b.totalSales - a.totalSales);
+    };
+
     // 데이터 조회 함수
     const fetchSalesData = async () => {
         setLoading(true);
@@ -65,6 +98,7 @@ const SalesStatComponent = ({ year: initialYear, month: initialMonth }) => {
             // 현재 월 데이터 조회
             let current = null;
             let prev = null;
+            let details = [];
             
             try {
                 current = await getSalesStat(selectedYear, selectedMonth);
@@ -73,6 +107,17 @@ const SalesStatComponent = ({ year: initialYear, month: initialMonth }) => {
                 console.error('현재 월 매출 통계 조회 실패:', err);
                 setHasCurrentData(false);
                 setCurrentStat(null);
+            }
+            
+            // 공연별 상세 데이터 조회
+            if (current) {
+                try {
+                    details = await monthlyShowSalesDetail(selectedYear, selectedMonth);
+                    setShowDetails(details);
+                } catch (err) {
+                    console.error('공연별 상세 데이터 조회 실패:', err);
+                    setShowDetails([]);
+                }
             }
             
             // 이전 월 데이터 조회 (현재 데이터가 있을 때만)
@@ -115,6 +160,15 @@ const SalesStatComponent = ({ year: initialYear, month: initialMonth }) => {
             const recalculatedData = await recalculateSalesStat(selectedYear, selectedMonth);
             setCurrentStat(recalculatedData);
             setHasCurrentData(true);
+            console.log("매출 : ",hasCurrentData)
+            
+            // 공연별 상세 데이터도 다시 조회
+            try {
+                const details = await monthlyShowSalesDetail(selectedYear, selectedMonth);
+                setShowDetails(details);
+            } catch (err) {
+                setShowDetails([]);
+            }
             
             // 이전 월 데이터도 다시 조회
             try {
@@ -335,6 +389,9 @@ const SalesStatComponent = ({ year: initialYear, month: initialMonth }) => {
         prevStat?.salesSum || 0
     );
 
+    // 공연별 데이터 그룹화
+    const groupedShows = groupShowDetails(showDetails);
+
     return (
         <div className="space-y-6">
             {/* 검색 영역 */}
@@ -442,7 +499,7 @@ const SalesStatComponent = ({ year: initialYear, month: initialMonth }) => {
             {/* 상세 정보 */}
             <div className="bg-white shadow rounded-lg p-6 border border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">상세 정보</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div className="bg-gray-50 p-4 rounded">
                         <div className="text-sm font-medium text-gray-600">조회 기간</div>
                         <div className="text-lg font-semibold text-gray-800">
@@ -467,6 +524,54 @@ const SalesStatComponent = ({ year: initialYear, month: initialMonth }) => {
                         </div>
                     </div>
                 </div>
+
+                {/* 공연별 매출 상세 */}
+                {groupedShows.length > 0 && (
+                    <div className="mt-6">
+                        <h4 className="text-md font-semibold text-gray-800 mb-4">공연별 매출 상세</h4>
+                        <div className="space-y-4">
+                            {groupedShows.map((show, index) => (
+                                <div key={`${show.showNo}-${index}`} className="border border-gray-200 rounded-lg p-4">
+                                    <div className="flex justify-between items-center mb-3">
+                                        <h5 className="text-lg font-semibold text-gray-800">{show.showName}</h5>
+                                        <div className="text-right">
+                                            <div className="text-sm text-gray-600">총 예약 좌석</div>
+                                            <div className="text-lg font-bold text-blue-600">{show.totalReserved}석</div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-sm text-gray-600">총 매출</div>
+                                            <div className="text-lg font-bold text-green-600">{formatCurrency(show.totalSales)}원</div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* 좌석 등급별 상세 */}
+                                    <div className="bg-gray-50 rounded p-3">
+                                        <div className="text-sm font-medium text-gray-700 mb-2">좌석 등급별 상세</div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                                            {show.seats.map((seat, seatIndex) => (
+                                                <div key={seatIndex} className="bg-white rounded p-3 border">
+                                                    <div className="text-sm font-medium text-gray-800">{seat.seatClass}</div>
+                                                    <div className="text-xs text-gray-600 mt-1">
+                                                        예약: {seat.reservedCount}석 | 단가: {formatCurrency(seat.seatPrice)}원
+                                                    </div>
+                                                    <div className="text-sm font-bold text-green-600 mt-1">
+                                                        {formatCurrency(seat.sales)}원
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {groupedShows.length === 0 && (
+                    <div className="mt-6 bg-gray-50 rounded-lg p-4 text-center">
+                        <div className="text-gray-500">해당 월에 예약된 공연이 없습니다.</div>
+                    </div>
+                )}
             </div>
 
             {/* 안내 메시지 */}
@@ -485,6 +590,7 @@ const SalesStatComponent = ({ year: initialYear, month: initialMonth }) => {
                             <ul className="list-disc pl-4 space-y-1">
                                 <li>매출 통계는 예약 상태가 'CONFIRMED'인 예약만을 대상으로 합니다.</li>
                                 <li>좌석 등급별 가격은 각 공연의 설정 가격을 기준으로 계산됩니다.</li>
+                                <li>공연별 상세 정보는 매출액 기준으로 내림차순 정렬됩니다.</li>
                                 <li>재계산 버튼을 통해 최신 데이터를 기반으로 통계를 업데이트할 수 있습니다.</li>
                             </ul>
                         </div>

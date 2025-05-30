@@ -29,14 +29,14 @@ const ReportListComponent = () => {
     getList({ page, size, reason: searchKeyword })
       .then((data) => {
         console.log("📋 불법 신고 리스트 응답 전체:", data);
-
-        if (data && Array.isArray(data.dtoList)) {
-          console.log("✅ dtoList 데이터 유효:", data.dtoList);
-          setServerData(data);
-        } else {
-          console.warn("❌ dtoList가 배열이 아님 또는 응답이 없음:", data?.dtoList);
-          setServerData(initState);
-        }
+         setServerData({
+          ...initState,           // 기본값을 먼저
+          ...data,               // API 응답으로 덮어쓰기
+          dtoList: data?.content || [],  // content를 dtoList로 매핑
+          totalCount: data?.totalElements || 0,
+          totalPage: data?.totalPages || 0,
+          current: data?.pageable?.pageNumber || 0
+          });
       })
       .catch((error) => {
         console.error("🔥 getList API 호출 실패:", error);
