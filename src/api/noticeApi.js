@@ -24,3 +24,9 @@ export const postAdd = async (noticeObj) => {
   const res = await jwtAxios.post(`${prefix}`, noticeObj);
   return res.data;
 };
+
+// 공지사항 수정
+export const putOne = async (noticeObj) => {
+  const res = await jwtAxios.put(`${prefix}/${noticeObj.noticeNo}`, noticeObj)
+  return res.data
+}

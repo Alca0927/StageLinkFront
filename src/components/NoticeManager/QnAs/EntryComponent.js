@@ -40,7 +40,7 @@ const EntryComponent = () => {
     }));
   };
 
-  const handleModify = async () => {
+  const handleModify = async (pageParam) => {
     try {
       const updateData = {
         questionNo: parseInt(qna.questionNo),
@@ -48,7 +48,7 @@ const EntryComponent = () => {
       };
       await putOne(qna.questionNo, updateData);
       alert("답변이 등록되었습니다.");
-      moveToList(1, "qna");
+      moveToList(pageParam, "Q&A");
     } catch (error) {
       console.error("답변 수정 실패:", error);
       alert("수정 중 오류가 발생했습니다.");
@@ -120,7 +120,7 @@ const EntryComponent = () => {
         <button
           type="button"
           className="px-6 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded"
-          onClick={() => moveToList(1, "qna")}
+          onClick={(pageParam) => moveToList(pageParam, "Q&A")}
         >
           목록
         </button>

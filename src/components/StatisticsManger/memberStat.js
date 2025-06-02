@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getMemberStat, getPrevMonthStat } from '../../api/StatApi';
+import { getMemberStat, getPrevMonthStat, postGenerate } from '../../api/StatApi';
+import { Chart } from 'react-google-charts'
 
 const StatComponent = ({ year: initialYear, month: initialMonth }) => {
     const navigate = useNavigate();
@@ -20,6 +21,9 @@ const StatComponent = ({ year: initialYear, month: initialMonth }) => {
     const [error, setError] = useState(null);
     const [hasCurrentData, setHasCurrentData] = useState(true);
     const [hasPrevData, setHasPrevData] = useState(true);
+    // 차트
+    const [yearlyChartData, setYearlyChartData] = useState([]);
+    const [loadingChart, setLoadingChart] = useState(false);
 
     // 년도 옵션 생성 (현재 년도부터 5년 전까지)
     const generateYearOptions = () => {
@@ -88,10 +92,43 @@ const StatComponent = ({ year: initialYear, month: initialMonth }) => {
         }
     };
 
+    // 차트 관련
+    const generateYearChart = async () => {
+    setLoadingChart(true);
+    try {
+      const promises = Array.from({ length: 12 }, (_, i) => getMemberStat(selectedYear, i + 1));
+      const results = await Promise.allSettled(promises);
+
+      const chartData = [["월", "활동 회원 수", "가입자 수"]];
+      results.forEach((result, i) => {
+        const label = `${i + 1}월`;
+        if (result.status === "fulfilled" && result.value) {
+          const { memberSum, joinedMember } = result.value;
+          chartData.push([label, memberSum || 0, joinedMember || 0]);
+        } else {
+          chartData.push([label, 0, 0]);
+        }
+      });
+
+      setYearlyChartData(chartData);
+    } catch (error) {
+      console.error("차트 데이터 생성 실패:", error);
+    } finally {
+      setLoadingChart(false);
+    }
+  };
+
+
     // 컴포넌트 마운트 시 데이터 조회
     useEffect(() => {
         fetchStatData();
     }, []);
+
+
+    // 차트 
+    useEffect(() => {
+        generateYearChart();
+    }, [selectedYear]);
 
     // 검색 버튼 클릭 핸들러
     const handleSearch = () => {
@@ -100,6 +137,12 @@ const StatComponent = ({ year: initialYear, month: initialMonth }) => {
         // 데이터 다시 조회
         fetchStatData();
     };
+
+    const handleReGenerate = async () => {
+        console.log("Year : ", selectedYear, "Month : ",selectedMonth)
+        await postGenerate(selectedYear, selectedMonth);
+        await handleSearch();
+    }
 
     // 로딩 중 표시
     if (loading) {
@@ -148,6 +191,12 @@ const StatComponent = ({ year: initialYear, month: initialMonth }) => {
                                 className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 검색
+                            </button>
+                            <button
+                                onClick={handleReGenerate}
+                                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                재계산
                             </button>
                         </div>
                     </div>
@@ -207,6 +256,12 @@ const StatComponent = ({ year: initialYear, month: initialMonth }) => {
                                 className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 검색
+                            </button>
+                            <button
+                                onClick={handleReGenerate}
+                                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                재계산
                             </button>
                         </div>
                     </div>
@@ -272,6 +327,12 @@ const StatComponent = ({ year: initialYear, month: initialMonth }) => {
                                 className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 검색
+                            </button>
+                            <button
+                                onClick={handleReGenerate}
+                                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                재계산
                             </button>
                         </div>
                     </div>
@@ -342,6 +403,12 @@ const StatComponent = ({ year: initialYear, month: initialMonth }) => {
                         >
                             검색
                         </button>
+                        <button
+                                onClick={handleReGenerate}
+                                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                재계산
+                            </button>
                     </div>
                 </div>
             </div>
@@ -422,6 +489,32 @@ const StatComponent = ({ year: initialYear, month: initialMonth }) => {
                     </span>
                 )}
             </div>
+
+            {/* 차트 영역 */}
+      <div className="bg-white p-4 rounded shadow">
+        <h2 className="text-lg font-semibold mb-4">{selectedYear}년 월별 통계</h2>
+        {loadingChart ? (
+          <div>차트를 불러오는 중...</div>
+        ) : (
+          <Chart
+            chartType="Line"
+            width="100%"
+            height="400px"
+            loader={<div>Loading Chart...</div>}
+            data={yearlyChartData}
+            options={{
+              chart: {
+                title: `${selectedYear}년 월별 회원 통계`,
+                subtitle: '활동 회원 수와 가입자 수 비교',
+              },
+              curveType: "function",
+              legend: { position: "bottom" },
+            }}
+            chartWrapperParams={{ view: { columns: [0, 1, 2] } }}
+            rootProps={{ 'data-testid': '1' }}
+          />
+        )}
+      </div>
         </div>
     );
 };

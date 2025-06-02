@@ -45,13 +45,7 @@ const ListComponent = () => {
     console.log("🔍 [handleSearch] 검색어:", searchKeyword);
     moveToList(1, "qna", { question: searchKeyword });
   };
-
-  const handleReset = () => {
-    console.log("🔁 [handleReset] 전체 목록 보기");
-    setSearchKeyword("");
-    moveToList(1, "qna");
-  };
-
+  
   return (
     <div>
       <div className="mb-4 flex gap-2">
@@ -67,12 +61,6 @@ const ListComponent = () => {
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
           검색
-        </button>
-        <button
-          onClick={handleReset}
-          className="bg-gray-300 text-black px-3 py-2 rounded hover:bg-gray-400"
-        >
-          전체 보기
         </button>
       </div>
 
