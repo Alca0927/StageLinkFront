@@ -4,8 +4,7 @@ const StatisticSideMenu = () => {
   const location = useLocation();
   const now = new Date();
   const year = now.getFullYear();
-  const month = now.getMonth(); // 0부터 시작 → 1 더해야 함
-  const showNo = null;
+  const month = now.getMonth() + 1; // 0부터 시작 → 1 더해야 함
   
   const linkClass = (path) =>
     `font-bold px-2 py-1 rounded transition ${

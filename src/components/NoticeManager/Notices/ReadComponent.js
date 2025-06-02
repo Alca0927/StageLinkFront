@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getOne } from "../../../api/noticeApi";
+import { getOne, putOne } from "../../../api/noticeApi";
 import useCustomMove from "../../../hooks/useCustomMove";
 
 const initState = {
@@ -56,9 +56,25 @@ const NoticeReadComponent = () => {
       });
   }, [noticeNo]);
 
-  const handleClickList = () => {
-    moveToList(1, "notices");
+  const handleClickList = (pageParam) => {
+    moveToList(pageParam, "notices");
   };
+
+  const handleChange = (field) => (e) => {
+    setNotice(prev => ({
+      ...prev,
+      [field]: e.target.value
+    }));
+  };
+
+  const handleModify = async () => {
+    try {
+      putOne(notice);
+      alert("수정이 완료되었습니다.");
+    } catch (error){
+      console.error(error);
+    }
+  }
 
   if (loading) {
     return (
@@ -104,32 +120,51 @@ const NoticeReadComponent = () => {
 
           <div className="mb-6">
             <label className="font-semibold text-gray-700 mb-2 block">제목</label>
-            <div className="p-4 bg-gray-50 rounded border text-lg font-medium">
-              {notice.noticeTitle}
-            </div>
+            <input
+              type="text"
+              value={notice.noticeTitle}
+              readOnly={false}
+              onChange={handleChange("noticeTitle")}
+              className="p-4 w-full bg-gray-50 rounded border text-lg font-medium"
+            />
+
           </div>
 
           <div className="mb-6">
             <label className="font-semibold text-gray-700 mb-2 block">작성일</label>
-            <div className="p-3 bg-gray-50 rounded border">
-              {notice.noticeDate ? new Date(notice.noticeDate).toLocaleString('ko-KR') : ''}
-            </div>
+            <input
+              type="text"
+              value={notice.noticeDate ? new Date(notice.noticeDate).toLocaleString('ko-KR') : ''}
+              readOnly={true}
+              className="p-4 w-full bg-gray-50 rounded border text-lg font-medium"
+            />
           </div>
 
           <div className="mb-6">
             <label className="font-semibold text-gray-700 mb-2 block">내용</label>
-            <div className="p-4 bg-gray-50 rounded border min-h-[300px] whitespace-pre-wrap leading-relaxed">
-              {notice.noticeContent}
-            </div>
+            <input
+              type="text"
+              value={notice.noticeContent}
+              readOnly={false}
+              onChange={handleChange("noticeContent")}
+              className="p-4 w-full bg-gray-50 rounded border text-lg font-medium"
+            />
           </div>
         </div>
 
+        {/* 버튼 */}
         <div className="w-full flex justify-center gap-3">
           <button
             onClick={handleClickList}
             className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
           >
             목록
+          </button>
+          <button
+            onClick={handleModify}
+            className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+          >
+            수정
           </button>
         </div>
       </div>

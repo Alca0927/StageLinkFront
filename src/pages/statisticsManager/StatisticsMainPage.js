@@ -1,11 +1,16 @@
 import BasicLayout from "../../layouts/BasicLayout";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import StatMainComponent from "../../components/StatisticsManger/statMainComponent";
 
 const StatisticsMainPage = () => {
+    const location = useLocation();
     return (
         <BasicLayout>
-            <div>Statistics Main Page</div>
+            {location.pathname === "/admin/statisticsmanager" ? 
+            <StatMainComponent/>
+            :
             <Outlet/>
+            }
         </BasicLayout>
     );
 }

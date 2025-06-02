@@ -30,6 +30,12 @@ export const getPrevMonthStat = async (year, month) => {
     }
 }
 
+export const postGenerate = async (year, month) => {
+  const res = await jwtAxios.post(`${prefix}/stat/member/${year}/${month}`);
+  return res.data;
+};
+
+// ----------------매출----------------------
 // 매출 통계 데이터 조회
 export const getSalesStat = async (year, month) => {
     try {
