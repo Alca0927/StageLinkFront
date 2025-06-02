@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { getMembermanager } from "../../api/mainPageApi";
 
 const MemberMainComponent = () => {
   const [memberCount, setMemberCount] = useState(0);
@@ -7,28 +8,18 @@ const MemberMainComponent = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken"); // ⬅️ 로그인 시 저장된 토큰 불러오기
-    if (!token) return;
-
-    fetch("/api/admin/membermanager", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}` // ⬅️ JWT 토큰을 Authorization 헤더에 추가
-      }
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Summary API response:", data);
+    const fetchMemberData = async () => {
+      try{
+        const data = await getMembermanager();
+        console.log("회원 메인 페이지 API : ", data);
         setMemberCount(data.memberCount || 0);
         setReportCount(data.reportCount || 0);
-      })
-      .catch((err) => {
-        console.error("Error fetching member summary:", err);
-      });
+      } catch (err) {
+        console.error("회원 메인 페이지 에러 발생 : ", err)
+      }
+    };
+
+    fetchMemberData();
   }, []);
 
   const isRootPath = location.pathname === "/admin/membermanager";

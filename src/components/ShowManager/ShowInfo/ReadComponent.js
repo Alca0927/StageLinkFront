@@ -90,20 +90,20 @@ const ReadComponent = ({ showInfo }) => {
 
   return (
     <div className="max-w-3xl mx-auto mt-10 bg-white shadow-md rounded-lg p-8 border border-gray-300">
-      <h2 className="text-2xl font-bold text-blue-600 mb-6">ShowInfo Details</h2>
+      <h2 className="text-2xl font-bold text-blue-600 mb-6">공연 정보 상세</h2>
 
-      {makeEditableDiv("showInfo", showinfo.showInfo, true)}
-      {makeEditableDiv("showPoster", showinfo.showPoster, false, handleChange)}
-      {makeEditableDiv("showName", showinfo.showName, false, handleChange)}
-      {makeEditableDiv("showExplain", showinfo.showExplain, false, handleChange)}
-      {makeEditableDiv("showCategory", showinfo.showCategory, false, handleChange)}
-      {makeEditableDiv("showAge", showinfo.showAge, false, handleChange)}
-      {makeEditableDiv("showDuration", showinfo.showDuration, false, handleChange)}
-      {makeSelectableDiv("locationName", showinfo.showLocationDTO?.showlocation, false, handleLocationChange, locationList)}
-      {makeEditableDiv("showStyUrl1", showinfo.showStyUrl1, false, handleChange)}
-      {makeEditableDiv("showStyUrl2", showinfo.showStyUrl2, false, handleChange)}
-      {makeEditableDiv("showStyUrl3", showinfo.showStyUrl3, false, handleChange)}
-      {makeEditableDiv("showStyUrl4", showinfo.showStyUrl4, false, handleChange)}
+      {makeEditableDiv("공연 정보 ID", showinfo.showInfo, true)}
+      {makeEditableDiv("공연 포스터", showinfo.showPoster, false, handleChange)}
+      {makeEditableDiv("공연 명", showinfo.showName, false, handleChange)}
+      {makeEditableDiv("공연 설명", showinfo.showExplain, false, handleChange)}
+      {makeEditableDiv("공연 카테고리", showinfo.showCategory, false, handleChange)}
+      {makeEditableDiv("연령 제한", showinfo.showAge, false, handleChange)}
+      {makeEditableDiv("공연 시간", showinfo.showDuration, false, handleChange)}
+      {makeSelectableDiv("장소 명", showinfo.showLocationDTO?.showlocation, false, handleLocationChange, locationList)}
+      {makeEditableDiv("공연 이미지 1", showinfo.showStyUrl1, false, handleChange)}
+      {makeEditableDiv("공연 이미지 2", showinfo.showStyUrl2, false, handleChange)}
+      {makeEditableDiv("공연 이미지 3", showinfo.showStyUrl3, false, handleChange)}
+      {makeEditableDiv("공연 이미지 4", showinfo.showStyUrl4, false, handleChange)}
 
       <div className="flex justify-end space-x-4 mt-10">
         <button

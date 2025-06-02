@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { getShowmanager } from "../../api/mainPageApi";
 
 const ShowMainComponent = () => {
   const [showCount, setShowCount] = useState(0);
@@ -7,28 +8,18 @@ const ShowMainComponent = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) return;
-
-    fetch("/api/admin/showmanager", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      }
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
+    const fetchShowData = async () => {
+      try {
+        const data = await getShowmanager();
         console.log("Show Manager API response:", data);
         setShowCount(data.showCount || 0);
         setActorCount(data.actorCount || 0);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Error fetching show summary:", err);
-      });
+      }
+    };
+
+    fetchShowData();
   }, []);
 
   const isRootPath = location.pathname === "/admin/showmanager";

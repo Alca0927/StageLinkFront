@@ -9,6 +9,7 @@ const getNum = (param, defaultValue) => {
   return parseInt(param);
 };
 
+// 
 const useCustomMove = () => {
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ const useCustomMove = () => {
   const size = getNum(queryParams.get('size'), 10);
   const queryDefault = createSearchParams({ page, size }).toString();
 
+  // 목록으로 가기
   const moveToList = (pageParam, path) => {
     let queryStr = "";
 
@@ -36,6 +38,7 @@ const useCustomMove = () => {
     });
   };
 
+  // 수정 페이지로 가기
   const moveToModify = (num, path) => {
     console.log(queryDefault);
     navigate({
@@ -44,6 +47,7 @@ const useCustomMove = () => {
     });
   };
 
+  // 상세 페이지로 가기
   const moveToRead = (num, path) => {
     if (num) {
       console.log("Navigating with:", num); // num 값 확인
@@ -56,6 +60,7 @@ const useCustomMove = () => {
     }
   };
 
+  // 추가 페이지로 가기
   const moveToAdd = (path) => {
     navigate({
       pathname: `../${path}/add`,

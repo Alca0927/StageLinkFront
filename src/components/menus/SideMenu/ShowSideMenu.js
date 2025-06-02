@@ -16,7 +16,7 @@ const ShowSideMenu = () => {
         공연 목록
       </Link>
       <Link to="/admin/showmanager/showinfo/list" className={linkClass("showinfo")}>
-        공연 상세 목록
+        공연 정보 목록
       </Link>
       <Link to="/admin/showmanager/location/list" className={linkClass("location")}>
         공연장 목록

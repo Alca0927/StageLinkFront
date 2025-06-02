@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import BasicLayout from "../layouts/BasicLayout";
 import CalendarView from "../components/CalendarView";
 
+// 메인 페이지
 const MainPage = () => {
   const [tasks, setTasks] = useState([
     { text: "신규 회원 승인 확인", completed: false },

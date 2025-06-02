@@ -1,5 +1,6 @@
 import ListComponent from "../../../components/ShowManager/ActorShow/ListComponent";
 
+// 배우-공연 목록
 const ActorShowListPage = () => {
   
   return (

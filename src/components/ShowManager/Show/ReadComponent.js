@@ -90,7 +90,7 @@ const ReadComponent = ({ showNo }) => {
 
   return (
     <div className="max-w-3xl mx-auto mt-10 bg-white shadow-md rounded-lg p-8 border border-gray-300">
-      <h2 className="text-2xl font-bold text-blue-600 mb-6">Show Details</h2>
+      <h2 className="text-2xl font-bold text-blue-600 mb-6">공연 상세</h2>
 
       {makeEditableDiv("공연 번호", show.showNo, true)}
       {makeSelectDiv("공연 정보", show.showInfoDTO?.showInfo, handleShowInfoChange, showInfoList)}

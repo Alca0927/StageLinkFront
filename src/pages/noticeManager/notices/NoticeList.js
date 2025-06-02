@@ -1,5 +1,6 @@
 import ListComponent from "../../../components/NoticeManager/Notices/ListComponent";
 
+// 공지 목록 페이지
 const NoticeListPage = () => {
     return (
         <div className="p-4 w-full bg-white">

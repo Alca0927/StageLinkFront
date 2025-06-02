@@ -3,7 +3,6 @@ import { getList } from "../../../api/refundApi";
 import useCustomMove from "../../../hooks/useCustomMove";
 import PageComponent from "../../common/PageComponent";
 
-
 const initState = {
   dtoList: [],
   pageNumList: [],
@@ -18,59 +17,89 @@ const initState = {
 }
 
 const ListComponent = () => {
-    const {page,size, refresh,moveToList, moveToRead} = useCustomMove()
-
+    const {page, size, refresh, moveToList, moveToRead} = useCustomMove()
     const [serverData, setServerData] = useState(initState)
 
     useEffect(() => {
-      getList({page,size}).then(data => {
+      getList({page, size}).then(data => {
         console.log(data)
         setServerData(data)
       })
-    }, [page,size,refresh])
+    }, [page, size, refresh])
 
     return (
-      <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">
-  
-      <div className="flex flex-wrap mx-auto justify-center p-6">
-  
-        {serverData.dtoList.map(refund =>
-
-        <div
-        key= {refund.refundNo} 
-          className="w-full min-w-[400px]  p-2 m-2 rounded shadow-md"
-          onClick={() => {
-          console.log(refund.refundNo);  // showlocation 값 로그 확인
-          moveToRead(refund.refundNo, "refund"); }} > 
-  
-          <div className="flex ">
-            <div className="font-extrabold text-2xl p-2 w-1/12">
-              {refund.refundNo}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-extrabold">
-              {refund.member.memberNo}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {refund.reservation.reservationNo}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {refund.seat.seatId}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {refund.seat.seatClass}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {refund.seat.seatNumber}
-            </div>
-            <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-              {refund.refundDate}
-            </div>
-          </div>
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto border border-gray-300 text-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-3 border text-center">환불번호</th>
+                <th className="px-4 py-3 border text-center">회원번호</th>
+                <th className="px-4 py-3 border text-center">예약번호</th>
+                <th className="px-4 py-3 border text-center">좌석ID</th>
+                <th className="px-4 py-3 border text-center">좌석등급</th>
+                <th className="px-4 py-3 border text-center">좌석번호</th>
+                <th className="px-4 py-3 border text-center">환불일</th>
+              </tr>
+            </thead>
+            <tbody>
+              {serverData.dtoList.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="text-center text-gray-500 py-6">
+                    🔍 데이터가 없습니다.
+                  </td>
+                </tr>
+              ) : (
+                serverData.dtoList.map(refund => (
+                  <tr
+                    key={refund.refundNo}
+                    onClick={() => {
+                      console.log(refund.refundNo);
+                      moveToRead(refund.refundNo, "refund");
+                    }}
+                    className="cursor-pointer hover:bg-blue-50 transition-colors"
+                  >
+                    <td className="px-4 py-3 border text-center font-bold">
+                      {refund.refundNo}
+                    </td>
+                    <td className="px-4 py-3 border text-center">
+                      {refund.member?.memberNo || refund.member}
+                    </td>
+                    <td className="px-4 py-3 border text-center">
+                      {refund.reservation?.reservationNo || refund.reservation}
+                    </td>
+                    <td className="px-4 py-3 border text-center">
+                      {refund.seat?.seatId || refund.seat}
+                    </td>
+                    <td className="px-4 py-3 border text-center">
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        refund.seat?.seatClass === 'VIP' ? 'bg-purple-100 text-purple-800' :
+                        refund.seat?.seatClass === 'R석' ? 'bg-blue-100 text-blue-800' :
+                        refund.seat?.seatClass === 'S석' ? 'bg-green-100 text-green-800' :
+                        refund.seat?.seatClass === 'A석' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {refund.seat?.seatClass || '-'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 border text-center">
+                      {refund.seat?.seatNumber || '-'}
+                    </td>
+                    <td className="px-4 py-3 border text-center">
+                      {refund.refundDate}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
-        )}
+        
+        <PageComponent 
+          serverData={serverData} 
+          movePage={(pageParam) => moveToList(pageParam, "refund")}
+        />
       </div>
-        <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "refund")}></PageComponent>
-    </div>
     );
 }
 

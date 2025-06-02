@@ -1,5 +1,3 @@
-// 📁 src/util/jwtUtil.js
-
 import axios from "axios";
 import { API_SERVER_HOST } from "../config/server";
 
@@ -8,7 +6,7 @@ const jwtAxios = axios.create({
   withCredentials: true,
 });
 
-// 🔁 토큰 리프레시
+// 토큰 리프레시
 const refreshJWT = async () => {
   const refreshToken = localStorage.getItem("refreshToken");
   const accessToken = localStorage.getItem("accessToken");
