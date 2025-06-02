@@ -45,10 +45,8 @@ const ListComponent = () => {
   };
 
   return (
-    <div className="flex max-w-6xl mx-auto mt-8">
+    <div className="flex mx-auto mt-8">
       <div className="w-full">
-        <h2 className="text-2xl font-bold mb-6">회원 목록</h2>
-
         {/* 검색창 */}
         <div className="mb-4 flex items-center gap-4">
           <input

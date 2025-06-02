@@ -43,12 +43,12 @@ const ReadComponent = ({ showlocation }) => {
 
   return (
     <div className="max-w-3xl mx-auto mt-10 bg-white shadow-md rounded-lg p-8 border border-gray-300">
-      <h2 className="text-2xl font-bold text-blue-600 mb-6">Location Details</h2>
+      <h2 className="text-2xl font-bold text-blue-600 mb-6">장소 상세</h2>
 
-      {makeEditableDiv("showLocation", location.showlocation, true)}
-      {makeEditableDiv("facilityId", location.facilityId, true)}
-      {makeEditableDiv("locationName", location.locationName, false, handleChange("locationName"))}
-      {makeEditableDiv("locationAddress", location.locationAddress, false, handleChange("locationAddress"))}
+      {makeEditableDiv("장소 ID", location.showlocation, true)}
+      {makeEditableDiv("시설 참조 ID", location.facilityId, true)}
+      {makeEditableDiv("장소 명", location.locationName, false, handleChange("locationName"))}
+      {makeEditableDiv("주소 명", location.locationAddress, false, handleChange("locationAddress"))}
 
       <div className="flex justify-end space-x-4 mt-10">
         <button

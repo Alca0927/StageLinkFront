@@ -9,7 +9,7 @@ const initState = {
   pageRequestDTO: null,
   prev: false,
   next: false,
-  totalCount: 0, // totoalCount -> totalCount 오타 수정
+  totalCount: 0, 
   prevPage: 0,
   nextPage: 0,
   totalPage: 0,
@@ -28,49 +28,76 @@ const ListComponent = () => {
     }, [page, size, refresh])
 
     return (
-      <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">
-        <div className="flex flex-wrap mx-auto justify-center p-6">
-          {serverData.dtoList.map(reservation =>
-            <div key={reservation.reservationNo} 
-              className="w-full min-w-[400px] p-2 m-2 rounded shadow-md cursor-pointer hover:bg-gray-50"
-              onClick={() => {
-                console.log(reservation.reservationNo);
-                moveToRead(reservation.reservationNo, "reservation");
-              }}> 
-              <div className="flex">
-                <div className="font-extrabold text-2xl p-2 w-1/12">
-                  {reservation.reservationNo}
-                </div>
-                <div className="text-1xl m-1 p-2 w-8/12 font-extrabold">
-                  {/* member 객체에서 적절한 속성을 선택해서 표시 */}
-                  {reservation.member?.name || reservation.member?.nickname || reservation.member?.userId || '회원정보없음'}
-                </div>
-                <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-                  {/* show도 객체일 가능성이 있으니 확인 */}
-                  {typeof reservation.show === 'object' ? reservation.show?.title || reservation.show?.name : reservation.show}
-                </div>
-                <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-                  {/* seat도 객체일 가능성이 있으니 확인 */}
-                  {typeof reservation.seat === 'object' ? reservation.seat?.seatNumber || reservation.seat?.seatId : reservation.seat}
-                </div>
-                <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-                  {reservation.reservationDate}
-                </div>
-                <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-                  {reservation.status}
-                </div>
-              </div>
-            </div>
-          )}
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto border border-gray-300 text-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-3 border text-center">예약번호</th>
+                <th className="px-4 py-3 border text-center">회원정보</th>
+                <th className="px-4 py-3 border text-center">공연</th>
+                <th className="px-4 py-3 border text-center">좌석</th>
+                <th className="px-4 py-3 border text-center">예약일</th>
+                <th className="px-4 py-3 border text-center">상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              {serverData.dtoList.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="text-center text-gray-500 py-6">
+                    🔍 데이터가 없습니다.
+                  </td>
+                </tr>
+              ) : (
+                serverData.dtoList.map(reservation => (
+                  <tr
+                    key={reservation.reservationNo}
+                    onClick={() => {
+                      console.log(reservation.reservationNo);
+                      moveToRead(reservation.reservationNo, "reservation");
+                    }}
+                    className="cursor-pointer hover:bg-blue-50 transition-colors"
+                  >
+                    <td className="px-4 py-3 border text-center font-bold">
+                      {reservation.reservationNo}
+                    </td>
+                    <td className="px-4 py-3 border text-center">
+                      {reservation.member?.name || reservation.member?.nickname || reservation.member?.userId || '회원정보없음'}
+                    </td>
+                    <td className="px-4 py-3 border text-center">
+                      {typeof reservation.show === 'object' ? reservation.show?.showInfo?.showName || reservation.show?.showName : reservation.show}
+                    </td>
+                    <td className="px-4 py-3 border text-center">
+                      {typeof reservation.seat === 'object' ? reservation.seat?.seatNumber || reservation.seat?.seatId : reservation.seat}
+                    </td>
+                    <td className="px-4 py-3 border text-center">
+                      {reservation.reservationDate}
+                    </td>
+                    <td className="px-4 py-3 border text-center">
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        reservation.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
+                        reservation.status === 'CANCELED' ? 'bg-red-100 text-red-800' :
+                        reservation.status === 'TEMP' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {reservation.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
+        
         <PageComponent 
           serverData={serverData} 
           movePage={(pageParam) => 
-        moveToList(pageParam, "reservation")}
+            moveToList(pageParam, "reservation")
+          }
         />
       </div>
     );
 }
-
 
 export default ListComponent;

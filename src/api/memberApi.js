@@ -2,14 +2,14 @@ import jwtAxios from "../util/jwtUtil";
 import { API_SERVER_HOST } from "../config/server";
 
 // 백엔드 서버 주소
-const prefix = `${API_SERVER_HOST}/api/members`;
+const prefix = `${API_SERVER_HOST}/admin`;
 
 // 회원 목록 조회
 export const getList = async (pageParam) => {
   const { page, size, name } = pageParam;
 
   try {
-    const res = await jwtAxios.get(`${prefix}`, {
+    const res = await jwtAxios.get(`${prefix}/members`, {
       params: { page, size, name }
     });
     return res.data;
@@ -21,20 +21,20 @@ export const getList = async (pageParam) => {
 
 // 회원 상세 조회
 export const getOne = async (memberNo) => {
-  const res = await jwtAxios.get(`${prefix}/${memberNo}`);
+  const res = await jwtAxios.get(`${prefix}/members/${memberNo}`);
   return res.data;
 };
 
 // 회원 상태 변경
 export const updateState = async (member) => {
-  const res = await jwtAxios.put(`${prefix}/${member.memberNo}/state`, member);
+  const res = await jwtAxios.put(`${prefix}/members/${member.memberNo}/state`, member);
   return res.data;
 };
 
 // ✅ 회원 수 조회
 export const getCount = async () => {
   try {
-    const res = await jwtAxios.get(`${prefix}/count`);
+    const res = await jwtAxios.get(`${prefix}/members/count`);
     return res.data.count; // { count: 숫자 }
   } catch (err) {
     console.error("⚠️ 회원 수 조회 실패:", err);

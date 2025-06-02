@@ -1,13 +1,16 @@
 import ShowMainComponent from "../../components/ShowManager/ShowMainComponent";
 import BasicLayout from "../../layouts/BasicLayout";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 const ShowMainPage = () => {
+    const location = useLocation();
     return (
         <BasicLayout>
-            <div>공연 관리 페이지</div>
+            { location.pathname === "/admin/showmanager" ?
             <ShowMainComponent/>
+            :
             <Outlet/>
+            }
         </BasicLayout>
     );
 }

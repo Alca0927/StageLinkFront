@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom"
 import SalesStatComponent from "../../components/StatisticsManger/salesStat";
 
+// 매출 통계 페이지
 const SalesStatPage = () => {
     const {year, month} = useParams()
 

@@ -1,5 +1,6 @@
 import ListComponent from "../../../components/MemberManager/Reports/ListComponent";
 
+// 신고 목록 페이지
 const ReportListPage = () => {
     return (
         <div className="p-4 w-full bg-white">

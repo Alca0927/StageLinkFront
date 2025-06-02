@@ -8,7 +8,6 @@ import loginRouter from "./loginRouter";
 import LoginPage from "../pages/login/LoginPage"; // ?
 import statisticsRouter from "./statisticsRouter";
 import { createBrowserRouter } from "react-router-dom";
-import AddEventPage from "../pages/AddEventPage";
 
 const Loading = <div>Loading...</div>;
 
@@ -57,11 +56,7 @@ const root = createBrowserRouter([
         path: "/admin/statisticsmanager",
         element: <Suspense fallback={Loading}><StatisticsManager/></Suspense>,
         children: statisticsRouter()
-    },
-      {
-    path: "/add-event",
-    element: <Suspense fallback={Loading}><AddEventPage /></Suspense>
-  }
+    }
 ]);
 
 export default root;

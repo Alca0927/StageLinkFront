@@ -51,7 +51,7 @@ const ReportListComponent = () => {
   };
 
   return (
-    <div className="border-2 border-blue-200 mt-10 mr-2">
+    <div className="mt-10 mr-2">
       <div className="flex flex-wrap mx-auto p-6">
 
         {/* 검색창 */}
