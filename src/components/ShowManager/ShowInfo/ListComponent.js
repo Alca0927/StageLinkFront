@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getList } from "../../../api/showInfoApi";
+import { getList, takeApiInfo } from "../../../api/showInfoApi";
 import useCustomMove from "../../../hooks/useCustomMove";
 import PageComponent from "../../common/PageComponent";
 
@@ -45,6 +45,12 @@ const ListComponent = () => {
       : {});
   };
 
+  const handleApiInfo = async () => {
+    await takeApiInfo();
+    alert("KOPIS 데이터 수집 완료");
+    fetchData();
+  };
+
   return (
     <div className="max-w-4xl mx-auto mt-10 px-4">
 
@@ -63,6 +69,16 @@ const ListComponent = () => {
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
           검색
+        </button>
+      </div>
+
+      {/* 공연 추가 버튼 */}
+      <div className="mb-4">
+        <button
+          onClick={handleApiInfo}
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
+          API 가져오기
         </button>
       </div>
 
