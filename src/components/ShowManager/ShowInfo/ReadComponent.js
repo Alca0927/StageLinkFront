@@ -92,18 +92,18 @@ const ReadComponent = ({ showInfo }) => {
     <div className="max-w-3xl mx-auto mt-10 bg-white shadow-md rounded-lg p-8 border border-gray-300">
       <h2 className="text-2xl font-bold text-blue-600 mb-6">공연 정보 상세</h2>
 
-      {makeEditableDiv("공연 정보 ID", showinfo.showInfo, true)}
-      {makeEditableDiv("공연 포스터", showinfo.showPoster, false, handleChange)}
-      {makeEditableDiv("공연 명", showinfo.showName, false, handleChange)}
-      {makeEditableDiv("공연 설명", showinfo.showExplain, false, handleChange)}
-      {makeEditableDiv("공연 카테고리", showinfo.showCategory, false, handleChange)}
-      {makeEditableDiv("연령 제한", showinfo.showAge, false, handleChange)}
-      {makeEditableDiv("공연 시간", showinfo.showDuration, false, handleChange)}
+      {makeEditableDiv("공연 정보 ID", "showInfo" ,showinfo.showInfo, true)}
+      {makeEditableDiv("공연 포스터", "showPoster", showinfo.showPoster, false, handleChange)}
+      {makeEditableDiv("공연 명", "showName", showinfo.showName, false, handleChange)}
+      {makeEditableDiv("공연 설명", "showExplain", showinfo.showExplain, false, handleChange)}
+      {makeEditableDiv("공연 카테고리", "showCategory", showinfo.showCategory, false, handleChange)}
+      {makeEditableDiv("연령 제한", "showAge", showinfo.showAge, false, handleChange)}
+      {makeEditableDiv("공연 시간", "showDuration", showinfo.showDuration, false, handleChange)}
       {makeSelectableDiv("장소 명", showinfo.showLocationDTO?.showlocation, false, handleLocationChange, locationList)}
-      {makeEditableDiv("공연 이미지 1", showinfo.showStyUrl1, false, handleChange)}
-      {makeEditableDiv("공연 이미지 2", showinfo.showStyUrl2, false, handleChange)}
-      {makeEditableDiv("공연 이미지 3", showinfo.showStyUrl3, false, handleChange)}
-      {makeEditableDiv("공연 이미지 4", showinfo.showStyUrl4, false, handleChange)}
+      {makeEditableDiv("공연 이미지 1", "showStyUrl1", showinfo.showStyUrl1, false, handleChange)}
+      {makeEditableDiv("공연 이미지 2", "showStyUrl2", showinfo.showStyUrl2, false, handleChange)}
+      {makeEditableDiv("공연 이미지 3", "showStyUrl3", showinfo.showStyUrl3, false, handleChange)}
+      {makeEditableDiv("공연 이미지 4", "showStyUrl4", showinfo.showStyUrl4, false, handleChange)}
 
       <div className="flex justify-end space-x-4 mt-10">
         <button
@@ -126,12 +126,12 @@ const ReadComponent = ({ showInfo }) => {
 };
 
 // 📦 입력 필드 공통 구조
-const makeEditableDiv = (title, value, readOnly = false, onChange) => (
+const makeEditableDiv = (title, name, value, readOnly = false, onChange) => (
   <div className="flex items-center py-4 border-b">
     <div className="w-1/4 text-right pr-4 font-bold text-gray-700">{title}</div>
     <input
       type="text"
-      name={title}
+      name={name}
       value={value || ""}
       readOnly={readOnly}
       onChange={onChange}

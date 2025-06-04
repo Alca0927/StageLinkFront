@@ -40,3 +40,9 @@ export const putOne = async (showInfo) => {
   const res = await jwtAxios.put(`${prefix}/${showInfo.showInfo}`, showInfo)
   return res.data
 }
+
+// 공연 예술 API 정보 가지고 오기
+export const takeApiInfo = async () => {
+  const res = await jwtAxios.get(`${API_SERVER_HOST}/admin/fetch-kopis`)
+  return res.data
+}

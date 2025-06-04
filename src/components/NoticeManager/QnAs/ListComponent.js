@@ -43,7 +43,7 @@ const ListComponent = () => {
 
   const handleSearch = () => {
     console.log("🔍 [handleSearch] 검색어:", searchKeyword);
-    moveToList(1, "qna", { question: searchKeyword });
+    moveToList(1, "Q&A", { question: searchKeyword });
   };
   
   return (

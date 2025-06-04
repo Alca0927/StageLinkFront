@@ -24,6 +24,7 @@ export const getList = async ({ page, size, type, keyword }) => {
 // 추가 하기
 export const postAdd = async (actorShowObj) => {
     const res = await jwtAxios.post(`${prefix}/add`, actorShowObj)
+    console.log("API 데이터 : ", res.data)
     return res.data
 }
 
