@@ -20,28 +20,46 @@ const ListComponent = () => {
   const { page, size, refresh, moveToList, moveToRead } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
   const [searchName, setSearchName] = useState('');
-  const [error, setError] = useState(null);;
+  const [error, setError] = useState(null);
 
-  const fetchMembers = async (pageNum = page, name = '') => {
-    try {
-      const data = await getList({ page: pageNum, size, name });
-      console.log("🔥 서버 응답:", data);
-      setServerData(data);
-      setError(null);
-    } catch (error) {
-      console.error('❗ 회원 목록 조회 실패:', error);
-      const message = '서버와의 연결에 문제가 있습니다.';
-      setServerData(initState);
-      setError(message);
-    }
+  // ✅ 검색어와 함께 데이터를 가져오는 함수
+  const fetchData = (name = '') => {
+    const params = name.trim()
+      ? { page, size, name }
+      : { page, size };
+
+    getList(params)
+      .then((data) => {
+        console.log("🔥 서버 응답:", data);
+        setServerData(data);
+        setError(null);
+      })
+      .catch((error) => {
+        console.error('❗ 회원 목록 조회 실패:', error);
+        const message = '서버와의 연결에 문제가 있습니다.';
+        setServerData(initState);
+        setError(message);
+      });
   };
 
+  // ✅ 페이지 로딩 시 전체 목록 (검색어 없이)
   useEffect(() => {
-    fetchMembers(page, searchName);
+    fetchData(); // 검색어 없이 호출
   }, [page, size, refresh]);
 
+  // ✅ 검색 버튼 클릭 시 실행
   const handleSearch = () => {
-    moveToList(1, "members", { name: searchName });
+    fetchData(searchName); // 검색어와 함께 데이터 가져오기
+    moveToList(1, "members", searchName.trim() 
+      ? { name: searchName } 
+      : {});
+  };
+
+  // ✅ Enter 키 검색 지원
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   return (
@@ -54,6 +72,7 @@ const ListComponent = () => {
             placeholder="회원명 검색"
             value={searchName}
             onChange={(e) => setSearchName(e.target.value)}
+            onKeyDown={handleKeyDown}
             className="border px-3 py-2 rounded w-64"
           />
           <button
@@ -111,9 +130,14 @@ const ListComponent = () => {
           </tbody>
         </table>
 
+        {/* ✅ 페이지네이션에서 검색 상태 유지 */}
         <PageComponent 
           serverData={serverData} 
-          movePage={(pageParam) => moveToList(pageParam, "members")}
+          movePage={(pageParam) => 
+            moveToList(pageParam, "members", searchName.trim() 
+              ? { name: searchName } 
+              : {})
+          }
         />
       </div>
     </div>

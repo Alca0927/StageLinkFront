@@ -21,33 +21,51 @@ const ReportListComponent = () => {
   const [serverData, setServerData] = useState(initState);
   const [searchKeyword, setSearchKeyword] = useState("");
 
-  useEffect(() => {
+  // ✅ 검색어와 함께 데이터를 가져오는 함수
+  const fetchData = (reason = '') => {
+    const params = reason.trim()
+      ? { page, size, reason }
+      : { page, size };
 
-    console.log("📌 디버깅: page =", page, "size =", size, "refresh =", refresh);
-    console.log("📌 디버깅: 검색 키워드 =", searchKeyword);
+    console.log("📌 디버깅: page =", page, "size =", size, "reason =", reason);
 
-    getList({ page, size, reason: searchKeyword })
+    getList(params)
       .then((data) => {
         console.log("📋 불법 신고 리스트 응답 전체:", data);
-         setServerData({
+        setServerData({
           ...initState,           // 기본값을 먼저
           ...data,               // API 응답으로 덮어쓰기
           dtoList: data?.content || [],  // content를 dtoList로 매핑
           totalCount: data?.totalElements || 0,
           totalPage: data?.totalPages || 0,
           current: data?.pageable?.pageNumber || 0
-          });
+        });
       })
       .catch((error) => {
         console.error("🔥 getList API 호출 실패:", error);
         setServerData(initState);
       });
+  };
+
+  // ✅ 페이지 로딩 시 전체 목록 (검색어 없이)
+  useEffect(() => {
+    fetchData(); // 검색어 없이 호출
   }, [page, size, refresh]);
 
-
+  // ✅ 검색 버튼 클릭 시 실행
   const handleSearch = () => {
     console.log("🔍 검색 버튼 클릭됨 - 키워드:", searchKeyword);
-    moveToList(1, "reports", { reason: searchKeyword });
+    fetchData(searchKeyword); // 검색어와 함께 데이터 가져오기
+    moveToList(1, "reports", searchKeyword.trim() 
+      ? { reason: searchKeyword } 
+      : {});
+  };
+
+  // ✅ Enter 키 검색 지원
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   return (
@@ -61,6 +79,7 @@ const ReportListComponent = () => {
             placeholder="신고 사유로 검색"
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={handleKeyDown}
             className="border px-3 py-2 rounded w-64"
           />
           <button
@@ -110,7 +129,16 @@ const ReportListComponent = () => {
           </table>
         </div>
       </div>
-      <PageComponent serverData={serverData} movePage={(pageParam) => moveToList(pageParam, "reports")}/>
+      
+      {/* ✅ 페이지네이션에서 검색 상태 유지 */}
+      <PageComponent 
+        serverData={serverData} 
+        movePage={(pageParam) => 
+          moveToList(pageParam, "reports", searchKeyword.trim() 
+            ? { reason: searchKeyword } 
+            : {})
+        }
+      />
     </div>
   );
 };
