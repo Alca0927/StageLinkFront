@@ -8,14 +8,9 @@ import { getList as getActorList } from "../../../api/actorApi";
 const initState = {
     actorDTO: {
         actorNo: 0,
-        actorName: "",
-        actorImage: "",
-        actorProfile: ""
     },
     showInfoDTO: {
         showInfo: 0,
-        showName: "",
-        showCategory: ""
     },
     roleName: "",
     showStartTime: "",
@@ -69,10 +64,7 @@ const AddComponent = () => {
         setActorShow(prev => ({
             ...prev,
             actorDTO: selectedActor || {
-                actorNo: selectedActorNo,
-                actorName: "",
-                actorImage: "",
-                actorProfile: ""
+                actorNo: selectedActorNo
             }
         }));
     };
@@ -85,9 +77,7 @@ const AddComponent = () => {
         setActorShow(prev => ({
             ...prev,
             showInfoDTO: selectedShow || {
-                showInfo: selectedShowInfo,
-                showName: "",
-                showCategory: ""
+                showInfo: selectedShowInfo
             }
         }));
     };
