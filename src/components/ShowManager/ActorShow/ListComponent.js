@@ -69,8 +69,16 @@ const ListComponent = () => {
           </button>
         </div>
 
-        <button onClick={handleAdd}>배우 출연작 추가</button>
-
+         {/* 공연 추가 버튼 */}
+        <div className="mb-4">
+          <button 
+            onClick={handleAdd}
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
+            배우 출연작 추가
+          </button>
+        </div>
+        
         {/* 테이블 */}
         <table className="w-full table-fixed border border-gray-300 text-sm mt-4">
           <thead className="bg-gray-100">
