@@ -1,70 +1,36 @@
-# Getting Started with Create React App
+# React Project - StageLink
+SpringBoot, 리액트를 활용한 공연 예매 및 커뮤니티 사이트의 프론트입니다.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 개발 기간
+2025.04.28 ~ 2025.06.13
 
-## Available Scripts
+# 맴버구성
+1. 김용현 - 공연 관리, 예매 관리, 통계, 로그인 보안
+2. 이택동 - 회원 관리, 신고
+3. 전에스더 - 공지사항 및 Q&A, 로그인 토큰
 
-In the project directory, you can run:
+# 개발 환경
+JDK 21.0.6
+Spring Boot 3.4.4
+Apache Tomcat / 10.1.40
+MySQL 8.0.41
+Node.js v22.14.0
+React v19.1.0
+Tailwindcssv3.4.17
+Html5, Css3
 
-### `npm start`
+IntelliJ IDEA 2024.3.5
+SpringToolSuite4 modelVersion 4.0.0
+VsCode 1.100.3
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# 주요 기능
+공연 관리 - 공연, 공연 정보, 공연장, 배우, 배우 출연작 목록 및 CRU, 공연예술통합전산망 KOPIS API를 이용한 공연 정보, 공연장 데이터 
+회원 관리 - 회원 목록, 회원 상세, 회원 커뮤니티 기능 제한, 신고 목록
+공지, Q&A - 공지 목록, 공지 상세, 공지 등록, Q&A 목록, Q&A 답변 
+예매 관리 - 예매 내역 목록, 예매 내역 상세, 환불 내역 목록, 환불 내역 상세
+통계 - 회원 통계, 월별 통계
+로그인, 로그아웃
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# 스크린샷
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# 프로젝트 구조
